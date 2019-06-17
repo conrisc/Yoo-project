@@ -2,15 +2,22 @@
   "name": "yoo-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "start": "node index.js",
+    "start": "node dist/bundle.js",
+    "build": "webpack --config webpack.config.js",
     "test": "test"
   },
   "author": "Konrad Cielecki",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongodb": "^3.2.7"
+  },
+  "devDependencies": {
+    "webpack": "^4.34.0",
+    "webpack-cli": "^3.3.4",
+    "webpack-node-externals": "^1.7.2"
   }
 }

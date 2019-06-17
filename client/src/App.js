@@ -6,9 +6,9 @@ import { Content } from './Content';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      <article className="App-header">
         <Content />
-      </header>
+      </article>
     </div>
   );
 }
