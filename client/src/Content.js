@@ -1,27 +1,20 @@
 import React from 'react';
+import { Home } from './Home';
+import { Login } from './Login';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class Content extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    alert() {
-        alert("lol");
-    }
-
     render() {
         return (
             <div>
-                <h3>Sign in</h3>
-                <form onSubmit={this.alert} >
-                    <div class="form-group"> 
-                        <input type="text" class="form-control" placeholder="login"/>
-                    </div>
-                    <div class="form-group"> 
-                        <input type="password" class="form-control" placeholder="password"/>
-                    </div>
-                    <input type="submit" value="Sign in" class="btn btn-primary"/>
-                </form>
+                <Router>
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/login" component={Login} />
+                </Router>
             </div>
         )
     }
