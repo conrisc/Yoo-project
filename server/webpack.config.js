@@ -8,13 +8,28 @@ let plugins = [
 
 module.exports = {
   mode: 'development',
-  entry: './src/server.js',
+  entry: './src/server.ts',
   target: 'node',
   plugins: plugins,
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      }
+    ]
+  },
+  resolve: {
+    extensions: ['.ts ', '.js']
+  },
   externals: [nodeExternals()],
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: './'
+  },
+  node: {
+    console: false
   }
 };

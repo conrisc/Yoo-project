@@ -1,6 +1,9 @@
-import express from 'express';
-import cors from 'cors';
+import * as express from 'express';
+import * as cors from 'cors';
 import { injectAPI } from './api';
+import { Lol } from './lol.ts';
+
+var a = new Lol();
 
 const port = 3001;
 const app = express();
