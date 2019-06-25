@@ -6,7 +6,19 @@ class Panel extends React.Component {
     }
 
     render() {
-        return <p>To jest panel</p>
+        return <div>
+            <ul className="nav justify-content-end">
+                <li className="nav-item">
+                    <a className="nav-link" href="#">Szuakj podróży</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="#">Twoje podróże</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="#">YourName</a>
+                </li>
+            </ul>
+        </div>;
     }
 }
 
