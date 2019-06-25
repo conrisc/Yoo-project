@@ -17,7 +17,7 @@ class Login extends React.Component {
             })
             .then(msg => {
                 if (msg.login === 'success') {
-                    this.props.history.push('/');
+                    this.props.history.push('/panel');
                 }
                 this.setState({ error: 'Invalid credentials' });
             })
