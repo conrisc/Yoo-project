@@ -25,10 +25,10 @@ class Login extends React.Component {
         }
         return postData('http://localhost:3001/signin', credentials)
             .then(msg => {
-                if (msg.login === 'success') {
+                if (msg.login === 'success')
                     this.props.history.push('/panel');
-                }
-                this.setState({ errorMsg: 'Invalid credentials' });
+                else
+                    this.setState({ errorMsg: 'Invalid credentials' });
             })
             .catch(err => {
                 this.setState({ errorMsg: err.message });
