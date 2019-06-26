@@ -1,16 +1,29 @@
 import React from 'react';
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { DefaultMenu } from './DefaultMenu';
+import { UserMenu } from './UserMenu';
 
 class Menu extends React.Component {
+    readonly state;
+
     constructor(props) {
         super(props);
+        this.state = {
+            login: ''
+        }
+
+        setInterval(() => {
+            this.setState({ login: sessionStorage.getItem('login')})
+            console.log(this.state.login);
+        }, 2000);
     }
 
     render() {
-        return <Router>
-            <Link to='/'>Home</Link>
-            <Link to='/login'>Login</Link>
-        </Router>
+        return (
+            this.state.login === '' ? 
+                <DefaultMenu /> :
+                <UserMenu />
+        );
     }
 }
 

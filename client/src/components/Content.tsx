@@ -1,7 +1,6 @@
 import React from 'react';
 import { Home } from './Home';
 import { Login } from './Login';
-import { Panel } from './Panel';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class Content extends React.Component {
@@ -15,7 +14,6 @@ class Content extends React.Component {
                 <Router>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/login" component={Login} />
-                    <Route exact path="/panel" component={Panel} />
                 </Router>
             </div>
         )

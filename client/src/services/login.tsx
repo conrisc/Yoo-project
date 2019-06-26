@@ -2,7 +2,12 @@ class LoginService {
     constructor() {}
 
     public signIn(credentials) {
-        return this.postData('http://localhost:3001/signin', credentials);
+        return this.postData('http://localhost:3001/signin', credentials)
+            .then(data => {
+                if (data.status === 200)
+                    sessionStorage.setItem('login', data.login);
+                return data;
+            });
     }
     public signUp() {
 
