@@ -7,13 +7,13 @@ class Menu extends React.Component {
     }
 
     render() {
-        <Router>
+        return <Router>
             <Link to='/'>Home</Link>
             <Link to='/login'>Login</Link>
         </Router>
     }
 }
 
-return {
+export {
     Menu
 }

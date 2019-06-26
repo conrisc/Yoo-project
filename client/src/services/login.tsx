@@ -1,8 +1,8 @@
 class LoginService {
     constructor() {}
 
-    public siginIn(credentials) {
-        return postData('http://localhost:3001/signin', credentials);
+    public signIn(credentials) {
+        return this.postData('http://localhost:3001/signin', credentials);
     }
     public signUp() {
 

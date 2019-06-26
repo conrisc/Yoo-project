@@ -1,8 +1,10 @@
 import React from 'react';
-import { loginService } from '../services/';
+import { LoginService } from '../services';
 
 class Login extends React.Component {
-    constructor(props) {
+    readonly state;
+
+    constructor(readonly props) {
         super(props);
 
         this.state = {
@@ -25,7 +27,7 @@ class Login extends React.Component {
             password: this.state.password
         }
 
-        loginService.signIn(credentials)
+        new LoginService().signIn(credentials)
             .then(msg => {
                 if (msg.login === 'success')
                     this.props.history.push('/panel');
