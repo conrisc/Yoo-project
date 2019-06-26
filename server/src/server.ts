@@ -1,13 +1,10 @@
-import * as express from 'express';
-import * as cors from 'cors';
-import { injectAPI } from './api';
-import { Lol } from './lol.ts';
+import express from 'express';
+import cors from 'cors';
+import { injectAPI } from './api.ts';
 
-var a = new Lol();
-
-const port = 3001;
-const app = express();
-const corsOptions = {
+const port: number = 3001;
+const app: express.Application = express();
+const corsOptions: cors.CorsOptions = {
   origin: 'http://localhost:3000'
 }
 
@@ -15,4 +12,4 @@ app.use(cors(corsOptions));
 app.use(express.json())
 injectAPI(app);
 
-app.listen(port, () => console.log("Yoo-server is listening on ${port}"));
+app.listen(port, () => console.log(`Yoo-server is listening on ${port}`));
