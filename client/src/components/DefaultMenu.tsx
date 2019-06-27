@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class DefaultMenu extends React.Component {
     constructor(props) {
@@ -7,10 +7,10 @@ class DefaultMenu extends React.Component {
     }
 
     render() {
-        return <Router>
+        return <div>
             <Link to='/'>Home</Link>
             <Link to='/login'>Login</Link>
-        </Router>
+        </div>
     }
 }
 
