@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Menu } from './Menu';
+import { Header } from './Header';
 import './App.css';
 
 
@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="app">
         <Router>
-          <Menu />
+          <Header />
           <Content />
         </Router>
     </div>

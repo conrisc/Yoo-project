@@ -20,11 +20,11 @@ class Menu extends React.Component {
 
     render() {
         return (
-        <article className="app-header">
-            {this.state.login === '' ? 
-                <DefaultMenu /> :
-                <UserMenu />}
-        </article>
+            <div className="col-md-auto text-right">
+                {this.state.login === '' ?
+                    <DefaultMenu /> :
+                    <UserMenu />}
+            </div>
         );
     }
 }
