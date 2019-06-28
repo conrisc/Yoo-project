@@ -16,10 +16,10 @@ class UserMenu extends React.Component {
             <div>
                 <ul className="nav justify-content-end">
                     <li className="nav-item">
-                        <Link to="/find" className="nav-link">Find a trip</Link>
+                        <Link to="/searcher" className="nav-link">Find a trip</Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="/your" className="nav-link">Your trips</Link>
+                        <Link to="/trips" className="nav-link">Your trips</Link>
                     </li>
                     <li className="nav-item">
                         <Link to="/profile" className="nav-link">{this.state.login}</Link>

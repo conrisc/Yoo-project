@@ -20,7 +20,7 @@ class Menu extends React.Component {
 
     render() {
         return (
-            <div className="col-md-auto text-right">
+            <div className="col text-right">
                 {this.state.login === '' ?
                     <DefaultMenu /> :
                     <UserMenu />}
