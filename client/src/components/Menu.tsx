@@ -20,9 +20,11 @@ class Menu extends React.Component {
 
     render() {
         return (
-            this.state.login === '' ? 
+        <article className="app-header">
+            {this.state.login === '' ? 
                 <DefaultMenu /> :
-                <UserMenu />
+                <UserMenu />}
+        </article>
         );
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class UserMenu extends React.Component {
     readonly state;
@@ -12,21 +12,21 @@ class UserMenu extends React.Component {
     }
 
     render() {
-        return <Router>
+        return (
             <div>
                 <ul className="nav justify-content-end">
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Szuakj podróży</a>
+                        <Link to="/find" className="nav-link">Find a trip</Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Twoje podróże</a>
+                        <Link to="/your" className="nav-link">Your trips</Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">{this.state.login}</a>
+                        <Link to="/profile" className="nav-link">{this.state.login}</Link>
                     </li>
                 </ul>
             </div>
-        </Router>
+        );
     }
 }
 

@@ -8,13 +8,11 @@ import { Content } from './Content';
 
 function App() {
   return (
-    <div className="App">
-      <article className="App-header">
+    <div className="app">
         <Router>
           <Menu />
           <Content />
         </Router>
-      </article>
     </div>
   );
 }
