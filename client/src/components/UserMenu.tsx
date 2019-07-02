@@ -1,14 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 
 class UserMenu extends React.Component {
     readonly state;
 
-    constructor(props) {
+    constructor(readonly props) {
         super(props);
-        this.state = {
-            login: sessionStorage.getItem('login')
-        }
     }
 
     render() {
@@ -22,13 +20,24 @@ class UserMenu extends React.Component {
                         <Link to="/trips" className="nav-link">Your trips</Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="/profile" className="nav-link">{this.state.login}</Link>
+                        <Link to="/profile" className="nav-link">{this.props.login}</Link>
                     </li>
                 </ul>
             </div>
         );
     }
 }
+
+
+const mapStateToProps = (state) => {
+  return { login: state.login };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {}
+};
+
+// @ts-ignore
+UserMenu = connect(mapStateToProps, mapDispatchToProps)(UserMenu);
 
 export {
     UserMenu

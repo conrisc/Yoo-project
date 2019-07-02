@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import { LoginService } from '../services';
 
 class Login extends React.Component {
@@ -29,8 +31,10 @@ class Login extends React.Component {
 
         new LoginService().signIn(credentials)
             .then(data => {
-                if (data.status === 200)
+                if (data.status === 200) {
                     this.props.history.push('/panel');
+                    this.props.setLogin(data.login);
+                }
                 else
                     this.setState({ errorMsg: 'Invalid credentials' });
             })
@@ -58,6 +62,18 @@ class Login extends React.Component {
     }
 }
 
+
+const mapStateToProps = (state) => {
+  return { login: state.login };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setLogin: (login) => dispatch({ type: 'CHANGE_LOGIN', newLogin: login }),
+  }
+};
+
+// @ts-ignore
+Login = connect(mapStateToProps, mapDispatchToProps)(Login);
 
 export {
     Login

@@ -1,33 +1,35 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { connect } from 'react-redux';
 import { DefaultMenu } from './DefaultMenu';
 import { UserMenu } from './UserMenu';
 
 class Menu extends React.Component {
     readonly state;
 
-    constructor(props) {
+    constructor(readonly props) {
         super(props);
-        this.state = {
-            login: ''
-        }
-
-        setInterval(() => {
-            this.setState({ login: sessionStorage.getItem('login')})
-            console.log(this.state.login);
-        }, 2000);
     }
 
     render() {
         return (
             <div className="col text-right">
-                {this.state.login === '' ?
+                {this.props.login === '' ?
                     <DefaultMenu /> :
                     <UserMenu />}
             </div>
         );
     }
 }
+
+const mapStateToProps = (state) => {
+  return { login: state.login };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {}
+};
+
+// @ts-ignore
+Menu = connect(mapStateToProps, mapDispatchToProps)(Menu);
 
 export {
     Menu
