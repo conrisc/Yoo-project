@@ -9,8 +9,8 @@ class LoginService {
                 return data;
             });
     }
-    public signUp() {
-
+    public signUp(credentials) {
+        return this.postData('http://localhost:3001/signup', credentials);
     }
     public signOut() {
 

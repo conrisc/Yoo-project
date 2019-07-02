@@ -1,5 +1,6 @@
-import { signIn } from './loginService.ts';
+import { signIn, signUp } from './loginService.ts';
 
 export {
-    signIn
+    signIn,
+    signUp
 };
