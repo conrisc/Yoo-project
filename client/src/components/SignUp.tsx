@@ -12,7 +12,9 @@ class SignUp extends React.Component {
             login: '',
             password: '',
             name: '',
-            lastName: ''
+            lastName: '',
+            response: '',
+            class: ''
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -26,7 +28,10 @@ class SignUp extends React.Component {
             name: this.state.name,
             lastName: this.state.lastName
         }).then(data => {
-            console.log(data);
+            this.setState({
+                response: data.msg,
+                class: data.status === 201 ? 'alert alert-success' : 'alert alert-danger'
+            });
         })
 
     }
@@ -39,8 +44,11 @@ class SignUp extends React.Component {
 
     render() {
         return (
-            <form className="px-5" onSubmit={(e) => this.signUp(e)}>
+            <form className="px-5 simple-form m-auto" onSubmit={(e) => this.signUp(e)}>
                 <h2 className="text-center">Create an account</h2>
+                {this.state.response && <div className={this.state.class} role="alert">
+                    {this.state.response}
+                </div>}
                 <div className="form-group">
                     <label htmlFor="login">Login</label>
                     <input type="text" name="login" className="form-control" placeholder="login" onChange={this.handleInputChange}/>

@@ -1,21 +1,25 @@
 .app {
-  text-align: left;
+  	text-align: left;
 }
 
 .app-header {
-  background-color: #9797b7;
-  display: flex;
-  flex-direction: column;
-  /* align-items:; */
-  justify-content: space-between;
-  font-size: 20px;
-  color: white;
+  	background-color: #9797b7;
+  	display: flex;
+  	flex-direction: column;
+  	/* align-items:; */
+  	justify-content: space-between;
+  	font-size: 20px;
+  	color: white;
 }
 
 .bg-app-1 {
-  background-color: #f2f2f2;
+  	background-color: #f2f2f2;
 }
 
 .text-app-1 {
-  color: #ff0066;
+  	color: #ff0066;
+}
+
+.simple-form {
+	width: 400px;
 }
