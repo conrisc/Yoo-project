@@ -9,12 +9,15 @@ class LoginService {
                 return data;
             });
     }
+
     public signUp(credentials) {
         return this.postData('http://localhost:3001/signup', credentials);
     }
+
     public signOut() {
 
     }
+
     private postData(url = '', data = {}) {
         return fetch(url, {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.

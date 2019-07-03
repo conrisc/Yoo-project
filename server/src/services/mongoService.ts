@@ -32,23 +32,22 @@ class MongoService {
     }
 
     // @ts-ignore
-    public insert(login, password) {
+    public insert(collectionName: string, data) {
         return this.getDb()
             .then(db => {
                 // @ts-ignore
-                const collection = db.collection('users');
-                collection.insertOne({login, password});
+                const collection = db.collection(collectionName);
+                collection.insertOne(data);
             })
     }
 
     // @ts-ignore
-    public find(login, password) {
+    public find(collectionName: string, data) {
         return this.getDb()
             .then(db => {
                 // @ts-ignore
-                const collection = db.collection('users');
-                // @ts-ignore
-                return collection.find({login, password}).toArray();
+                const collection = db.collection(collectionName);
+                return collection.find(data).toArray();
             })
     }
 
