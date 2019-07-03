@@ -1,5 +1,5 @@
 .app {
-  text-align: center;
+  text-align: left;
 }
 
 .app-header {
@@ -10,4 +10,12 @@
   justify-content: space-between;
   font-size: 20px;
   color: white;
+}
+
+.bg-app-1 {
+  background-color: #f2f2f2;
+}
+
+.text-app-1 {
+  color: #ff0066;
 }

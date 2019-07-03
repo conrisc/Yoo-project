@@ -8,7 +8,9 @@ import './App.css';
 
 import { Content } from './Content';
 
-const reducer = (state, action) => {
+const initialState = { login: '' };
+
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'CHANGE_LOGIN':
       return { ...state, login: action.newLogin };
@@ -17,8 +19,7 @@ const reducer = (state, action) => {
     }
 };
 
-// @ts-ignore
-const store = createStore(reducer, { login: '' });
+const store = createStore(reducer);
 
 function App() {
   return (
