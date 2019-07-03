@@ -9,6 +9,11 @@ class UserMenu extends React.Component {
         super(props);
     }
 
+    logout(event) {
+        event.preventDefault();
+        this.props.setLogin('');
+    }
+
     render() {
         return (
             <div>
@@ -22,6 +27,9 @@ class UserMenu extends React.Component {
                     <li className="nav-item">
                         <Link to="/profile" className="nav-link">{this.props.login}</Link>
                     </li>
+                    <li className="nav-item">
+                        <a className="nav-link" onClick={(e) => this.logout(e)} href="">Logout</a>
+                    </li>
                 </ul>
             </div>
         );
@@ -33,7 +41,9 @@ const mapStateToProps = (state) => {
   return { login: state.login };
 };
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    setLogin: (login) => dispatch({ type: 'CHANGE_LOGIN', newLogin: login }),
+  }
 };
 
 // @ts-ignore

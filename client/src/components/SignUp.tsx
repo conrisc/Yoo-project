@@ -44,7 +44,7 @@ class SignUp extends React.Component {
 
     render() {
         return (
-            <form className="px-5 simple-form m-auto" onSubmit={(e) => this.signUp(e)}>
+            <form className="px-5 py-4 simple-form m-auto" onSubmit={(e) => this.signUp(e)}>
                 <h2 className="text-center">Create an account</h2>
                 {this.state.response && <div className={this.state.class} role="alert">
                     {this.state.response}
