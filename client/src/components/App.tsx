@@ -8,12 +8,17 @@ import './App.css';
 
 import { Content } from './Content';
 
-const initialState = { login: '' };
+const initialState = {
+  login: sessionStorage.getItem('login') || '',
+  token: sessionStorage.getItem('token') || ''
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'CHANGE_LOGIN':
-      return { ...state, login: action.newLogin };
+      return { ...state, login: action.login };
+    case 'CHANGE_TOKEN':
+      return { ...state, token: action.token };
     default:
       return state;
     }

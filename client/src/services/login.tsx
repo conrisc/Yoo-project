@@ -6,6 +6,7 @@ class LoginService {
             .then(data => {
                 if (data.status === 200)
                     sessionStorage.setItem('login', data.login);
+                    sessionStorage.setItem('token', data.token);
                 return data;
             });
     }
@@ -15,7 +16,12 @@ class LoginService {
     }
 
     public signOut() {
+        sessionStorage.removeItem('login');
+        sessionStorage.removeItem('token');
+    }
 
+    public isLoggedIn(credentials) {
+        return this.postData('http://localhost:3001/isloggedin', credentials);
     }
 
     private postData(url = '', data = {}) {

@@ -1,6 +1,7 @@
-import { signIn, signUp } from './loginService.ts';
+import { signIn, signUp, isLoggedIn} from './loginService.ts';
 
 export {
     signIn,
-    signUp
+    signUp,
+    isLoggedIn
 };

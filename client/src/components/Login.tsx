@@ -32,8 +32,9 @@ class Login extends React.Component {
         new LoginService().signIn(credentials)
             .then(data => {
                 if (data.status === 200) {
-                    this.props.history.push('/profile');
                     this.props.setLogin(data.login);
+                    this.props.setToken(data.token);
+                    this.props.history.push('/profile');
                 }
                 else
                     this.setState({ errorMsg: 'Invalid credentials' });
@@ -66,12 +67,13 @@ class Login extends React.Component {
 
 
 const mapStateToProps = (state) => {
-  return { login: state.login };
+  return {};
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    setLogin: (login) => dispatch({ type: 'CHANGE_LOGIN', newLogin: login }),
-  }
+    setLogin: (login) => dispatch({ type: 'CHANGE_LOGIN', login }),
+    setToken: (token) => dispatch({ type: 'CHANGE_TOKEN', token }),
+  };
 };
 
 // @ts-ignore

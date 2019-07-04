@@ -4,16 +4,20 @@ import { MongoService } from './mongoService.ts';
 let ms = new MongoService();
 
 function signIn(req: express.Request, res: express.Response) {
-    ms.find('users', req.body)
+    const { login, password } = req.body;
+    ms.find('users', { login, password })
         .then((items: any) => {
-            if (items.length > 0)
+            if (items.length > 0) {
+                const token: string = createSessionToken(req.body.login);
                 res.send({
                     'login': req.body.login,
+                    'token': token,
                     'status': 200
                 });
-            else
+            } else
                 res.send({
                     'login': req.body.login,
+                    'token': '',
                     'status': 401
                 });
         });
@@ -57,7 +61,7 @@ function signUp(req: express.Request, res: express.Response) {
                         'status': 503
                     });
                 });
-            else 
+            else
                 res.send({
                     'msg': 'User with given login already exist!',
                     'status': 400
@@ -66,7 +70,48 @@ function signUp(req: express.Request, res: express.Response) {
 
 }
 
+function isLoggedIn(req: express.Request, res: express.Response) {
+    const { login, token } = req.body;
+    ms.find('logged', { login, token })
+        .then((items: any) => {
+            if (items.length === 1)
+                res.send({
+                    'login': login,
+                    'status': 200
+                })
+            else
+                res.send({
+                    'login': login,
+                    'status': 400
+                });
+        });
+}
+
+function createSessionToken(login: string): string {
+    ms.deleteOne('logged', {login});
+
+    let token = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+
+    ms.insert('logged', {
+        token,
+        login
+    })
+
+    // function isUnique(token): boolean {
+    //     return ms.find('logged', {token: token})
+    //         .then((items: any) => {
+    //             return items.length === 0;
+    //         })
+    // }
+
+    return token;
+}
+
 export {
     signIn,
-    signUp
+    signUp,
+    isLoggedIn
 }

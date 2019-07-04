@@ -51,6 +51,16 @@ class MongoService {
             })
     }
 
+    // @ts-ignore
+    public deleteOne(collectionName: string, data) {
+        return this.getDb()
+            .then(db => {
+                // @ts-ignore
+                const collection = db.collection(collectionName);
+                return collection.deleteOne(data);
+            })
+    }
+
     public disconnect(): void {
         if (this.db) {
             this.client.close();

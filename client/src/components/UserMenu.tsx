@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 
+import { LoginService } from '../services';
+
 class UserMenu extends React.Component {
     readonly state;
 
@@ -12,6 +14,8 @@ class UserMenu extends React.Component {
     logout(event) {
         event.preventDefault();
         this.props.setLogin('');
+        this.props.setToken('');
+        new LoginService().signOut();
     }
 
     render() {
@@ -28,7 +32,7 @@ class UserMenu extends React.Component {
                         <Link to="/profile" className="nav-link">{this.props.login}</Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" onClick={(e) => this.logout(e)} href="">Logout</a>
+                        <a className="nav-link" onClick={(e) => this.logout(e)} href="#">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -42,7 +46,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    setLogin: (login) => dispatch({ type: 'CHANGE_LOGIN', newLogin: login }),
+    setLogin: (login) => dispatch({ type: 'CHANGE_LOGIN', login }),
+    setToken: (token) => dispatch({ type: 'CHANGE_TOKEN', token })
   }
 };
 
