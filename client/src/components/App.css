@@ -12,14 +12,19 @@
   	color: white;
 }
 
-.bg-app-1 {
-  	background-color: #f2f2f2;
-}
-
 .text-app-1 {
   	color: #ff0066;
 }
 
+.yoo-bg-1 {
+	background: #ff0066;
+}
+
 .simple-form {
 	width: 400px;
+}
+
+
+#map {
+	height: 70vh;
 }
