@@ -16,7 +16,7 @@ class Content extends React.Component {
 
     render() {
         return (
-            <div className="container pt-4">
+            <div className="container-fluid pt-4">
                 <Route exact path="/" component={Home} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/searcher" component={Searcher} />
