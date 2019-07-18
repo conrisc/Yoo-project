@@ -12,7 +12,7 @@
   	color: white;
 }
 
-.text-app-1 {
+.yoo-text-1 {
   	color: #ff0066;
 }
 
@@ -26,4 +26,9 @@
 
 #map {
 	height: 75vh;
+}
+
+.offer-img {
+	height: 150px;
+	width: 150px;
 }

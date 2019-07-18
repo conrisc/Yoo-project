@@ -22,8 +22,6 @@ class Menu extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log('fajnie');
-    console.log(state);
     return { login: state.login };
 };
 const mapDispatchToProps = (dispatch) => {

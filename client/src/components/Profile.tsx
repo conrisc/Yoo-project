@@ -21,7 +21,50 @@ class Profile extends React.Component {
     render() {
         return (
             <div>
-                This is your profile
+                <div className="row">
+                    <div className="col-2">
+                        <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <a className="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</a>
+                            <a className="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a>
+                            <a className="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a>
+                            <a className="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+                        </div>
+                    </div>
+                    <div className="col-auto">
+                        <div className="tab-content" id="v-pills-tabContent">
+                            <div className="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                <form className="px-5 py-4 simple-form m-auto" onSubmit={() => {}}>
+                                    <h2 className="text-center">Your profile</h2>
+                                    <div className="alert alert-info" role="alert">
+                                        Some message!
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="login">Login</label>
+                                        <input type="text" name="login" readOnly className="form-control-plaintext" placeholder="login"/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="password">Password</label>
+                                        <input type="password" name="password" className="form-control" placeholder="password" onChange={() => {}}/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="name">Name</label>
+                                        <input type="text" name="name" className="form-control" placeholder="name" onChange={() => {}}/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="lastname">Lastname</label>
+                                        <input type="text" name="lastName" className="form-control" placeholder="lastname" onChange={() => {}}/>
+                                    </div>
+                                    <div className="text-center">
+                                        <input type="submit" value="Edit profile" className="btn btn-primary"/>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">2</div>
+                            <div className="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">3</div>
+                            <div className="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">4</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
