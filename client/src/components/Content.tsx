@@ -1,13 +1,7 @@
 import React from 'react';
-
-import { Home } from './Home';
-import { Login } from './Login';
-import { Searcher } from './Searcher';
-import { Trips } from './Trips';
-import { Profile } from './Profile';
-import { SignUp } from './SignUp';
 import { Route } from "react-router-dom";
 
+import { routesDefinitions } from './routesDefinitions';
 
 class Content extends React.Component {
     constructor(props) {
@@ -17,12 +11,9 @@ class Content extends React.Component {
     render() {
         return (
             <div className="container-fluid pt-4">
-                <Route exact path="/" component={Home} />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/searcher" component={Searcher} />
-                <Route exact path="/trips" component={Trips} />
-                <Route exact path="/profile" component={Profile} />
-                <Route exact path="/signup" component={SignUp} />
+                {routesDefinitions.map((routeDefinition, index) => {
+                    return <Route exact path={routeDefinition.path} component={routeDefinition.component} key={index} />
+                })}
             </div>
         )
     }

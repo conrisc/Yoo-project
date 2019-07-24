@@ -36,7 +36,7 @@ class Searcher extends React.Component {
                                     </div>
                                     <div className="col text-center">
                                         <svg height="50px" width="100%" xmlns="http://www.w3.org/2000/svg">
-                                            <line x1="0" y1="25" x2="100%" y2="25" stroke="#CCCCCC" stroke-width="2" />
+                                            <line x1="0" y1="25" x2="100%" y2="25" stroke="#CCCCCC" strokeWidth="2" />
                                         </svg>
                                         <p>5 days</p>
                                     </div>

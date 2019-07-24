@@ -3,7 +3,7 @@ import React from 'react';
 // @ts-ignore
 const google = window.google;
 
-class Trips extends React.Component {
+class TripCreator extends React.Component {
 
     initMap() {
     }
@@ -76,5 +76,5 @@ class Trips extends React.Component {
 }
 
 export {
-    Trips
+    TripCreator
 }
