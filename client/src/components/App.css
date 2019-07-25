@@ -36,3 +36,29 @@
 .trip-img {
 	width: 900px;
 }
+
+.hide {
+	animation-name: slide-up;
+	animation-duration: 0.5s;
+	animation-fill-mode: forwards;
+	overflow: hidden;
+	position: relative;
+}
+
+@keyframes slide-up {
+	from { height: 62px; bottom: 0; }
+	to { height: 0; margin: 0; bottom: 32px; }
+}
+
+.show {
+	animation-name: slide-down;
+	animation-duration: 0.5s;
+	animation-fill-mode: forwards;
+	position: relative;
+	overflow: hidden;
+}
+
+@keyframes slide-down {
+	from { height: 0; bottom: 32px; }
+	to { height: 62px; bottom: 0; }
+}
