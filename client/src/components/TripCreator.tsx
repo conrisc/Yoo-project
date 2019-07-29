@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { TripService } from '../services';
+
 const TOKEN = "AIzaSyBvvydrMAOa6nn4vH-HJgV_Z9Ep-v7QHfk";
 
 // @ts-ignore
@@ -24,7 +26,7 @@ class TripCreator extends React.Component {
             startDate: '',
             endDate: '',
             tripDescrpition: '',
-            transportTypeClass: 'hide'
+            transportTypeClass: 'yoo-hide'
         }
     }
 
@@ -78,15 +80,31 @@ class TripCreator extends React.Component {
 
     handleTransportTypeChange(event) {
         this.setState({
-            transportTypeClass: event.target.value === 'provided' ? 'show' : 'hide'
+            transportTypeClass: event.target.value === 'provided' ? 'yoo-show' : 'yoo-hide'
         }) 
+    }
+
+    createTrip() {
+        const data = {
+            startingPoint: this.state.startingPoint,
+            destinationPoint: this.state.destinationPoint,
+            transport: this.state.transport,
+            transportType: this.state.transportType,
+            numberOfPeople: this.state.numberOfPeople,
+            accommodation: this.state.accommodation,
+            startDate: this.state.startDate,
+            endDate: this.state.endDate,
+            tripDescrpition: this.state.tripDescription
+
+        };
+        new TripService().createTrip(data);
     }
 
     render() {
         return (
             <div>
                 <div className="row py-2">
-                    <div ref={this.mapRef} className="col-9"></div>
+                    <div ref={this.mapRef} className="col-9 container-75vh"></div>
                     <form className="col simple-form">
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm" htmlFor="inputStart">Starting point</label>
@@ -146,7 +164,7 @@ class TripCreator extends React.Component {
                         </div>
                     </form>
                 </div>
-                <div className="row mt-2">
+                <div className="row mt-2 container">
                     <form className="col simple-form">
                         <div className="form-group">
                             <textarea className="form-control form-control-sm" placeholder="Description of your trip" name="tripDescription"
@@ -154,6 +172,9 @@ class TripCreator extends React.Component {
                             </textarea>
                         </div>
                     </form>
+                </div>
+                <div className="my-3 text-center footer">
+                    <button onClick={() => this.createTrip()} className="btn btn-primary">Create trip</button>
                 </div>
             </div>
         );

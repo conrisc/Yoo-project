@@ -1,12 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Header } from './Header';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import './App.css';
 
 
+import { Header } from './Header';
 import { Content } from './Content';
+import { Footer}  from './Footer';
 
 const initialState = {
   login: sessionStorage.getItem('login') || '',
@@ -33,6 +34,7 @@ function App() {
           <Provider store={store}>
             <Header />
             <Content />
+            <Footer />
           </Provider>
         </Router>
     </div>

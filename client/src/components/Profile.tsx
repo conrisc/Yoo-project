@@ -43,7 +43,11 @@ class Profile extends React.Component {
                                         <input type="text" name="login" readOnly className="form-control-plaintext" placeholder="login"/>
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="password">Password</label>
+                                        <label htmlFor="password">New Password</label>
+                                        <input type="password" name="password" className="form-control" placeholder="password" onChange={() => {}}/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="password">Confirm Password</label>
                                         <input type="password" name="password" className="form-control" placeholder="password" onChange={() => {}}/>
                                     </div>
                                     <div className="form-group">

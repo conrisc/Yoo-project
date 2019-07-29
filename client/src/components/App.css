@@ -24,7 +24,7 @@
 	width: 400px;
 }
 
-#map {
+.container-75vh {
 	height: 75vh;
 }
 
@@ -37,7 +37,7 @@
 	width: 900px;
 }
 
-.hide {
+.yoo-hide {
 	animation-name: slide-up;
 	animation-duration: 0.5s;
 	animation-fill-mode: forwards;
@@ -50,7 +50,7 @@
 	to { height: 0; margin: 0; bottom: 32px; }
 }
 
-.show {
+.yoo-show {
 	animation-name: slide-down;
 	animation-duration: 0.5s;
 	animation-fill-mode: forwards;

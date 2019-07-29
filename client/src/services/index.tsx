@@ -1,5 +1,7 @@
-import { LoginService } from './login';
+import { LoginService } from './LoginService';
+import { TripService } from './TripService'
 
 export {
-    LoginService
+    LoginService,
+    TripService
 }
