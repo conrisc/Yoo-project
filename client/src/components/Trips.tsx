@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { TripService } from '../services';
 
-class Searcher extends React.Component {
+class Trips extends React.Component {
     readonly state;
 
     constructor(props) {
@@ -75,5 +75,5 @@ class Searcher extends React.Component {
 }
 
 export {
-    Searcher
+   Trips 
 }

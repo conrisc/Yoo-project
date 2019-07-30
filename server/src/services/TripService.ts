@@ -34,6 +34,16 @@ class TripService {
                 });
             })
     }
+
+    public getUserTrips(req: express.Request, res: express.Response) {
+        const author = req.body.author;
+        ms.find('trips', { author })
+            .then((trips: []) => {
+                res.send({
+                    'trips': trips
+                })
+            })
+    }
 }
 
 export {

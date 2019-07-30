@@ -5,6 +5,10 @@ class TripService {
         return this.getData('http://localhost:3001/trips');
     }
 
+    public getUserTrips(author) {
+        return this.postData(`http://localhost:3001/trips/user`, {author})
+    }
+
     public getTrip(id) {
         return this.getData(`http://localhost:3001/trip/${id}`);
     }

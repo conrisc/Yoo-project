@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { TripService } from '../services';
 
@@ -12,7 +13,7 @@ class TripCreator extends React.Component {
     map;
     mapRef;
 
-    constructor(props) {
+    constructor(readonly props) {
         super(props);
 
         this.mapRef = React.createRef();
@@ -26,7 +27,8 @@ class TripCreator extends React.Component {
             startDate: '',
             endDate: '',
             tripDescrpition: '',
-            transportTypeClass: 'yoo-hide'
+            transportTypeClass: 'yoo-hide',
+            author: this.props.login
         }
     }
 
@@ -94,7 +96,8 @@ class TripCreator extends React.Component {
             accommodation: this.state.accommodation,
             startDate: this.state.startDate,
             endDate: this.state.endDate,
-            tripDescrpition: this.state.tripDescription
+            tripDescrpition: this.state.tripDescription,
+            author: this.state.author
 
         };
         new TripService().createTrip(data);
@@ -180,6 +183,16 @@ class TripCreator extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+  return { login: state.login };
+};
+const mapDispatchToProps = () => {
+  return {}
+};
+
+// @ts-ignore
+TripCreator = connect(mapStateToProps, mapDispatchToProps)(TripCreator);
 
 export {
     TripCreator

@@ -15,7 +15,6 @@ class Trip extends React.Component {
         const ts = new TripService();
         ts.getTrip(this.props.match.params.tripId)
             .then(data => {
-                console.log(data);
                 this.setState({ trip: data.trip[0] });
             })
 
