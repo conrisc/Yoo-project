@@ -1,5 +1,6 @@
 import express from 'express';
 import { MongoService } from './mongoService.ts';
+import { ObjectId } from 'mongodb';
 
 let ms = new MongoService();
 
@@ -21,6 +22,16 @@ class TripService {
                 res.send({
                     'trips': trips
                 })
+            })
+    }
+
+    public getTrip(req: express.Request, res: express.Response) {
+        const idFiled = new ObjectId(req.params.tripId);
+        ms.find('trips', { _id: idFiled })
+            .then(trip => {
+                res.send({
+                    'trip': trip
+                });
             })
     }
 }

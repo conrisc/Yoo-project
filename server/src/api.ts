@@ -10,6 +10,7 @@ function injectAPI(app: express.Application) {
     app.post('/isloggedin', services.isLoggedIn);
     app.post('/trip/create', ts.createTrip);
     app.get('/trips', ts.getTrips);
+    app.get('/trip/:tripId', ts.getTrip);
 }
 
 export {

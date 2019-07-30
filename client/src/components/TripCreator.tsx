@@ -22,7 +22,7 @@ class TripCreator extends React.Component {
             transport: 'own',
             transportType: 'car',
             numberOfPeople: 1,
-            accommodation: 'own',
+            accommodation: 'provided',
             startDate: '',
             endDate: '',
             tripDescrpition: '',

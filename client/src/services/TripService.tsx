@@ -2,7 +2,11 @@ class TripService {
     constructor() {}
 
     public getTrips() {
-        return this.getData('http://localhost:3001/trips')
+        return this.getData('http://localhost:3001/trips');
+    }
+
+    public getTrip(id) {
+        return this.getData(`http://localhost:3001/trip/${id}`);
     }
 
     public createTrip(data) {

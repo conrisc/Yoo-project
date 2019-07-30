@@ -13,7 +13,7 @@ const routesDefinitions = [
     { path: '/create-trip', component: TripCreator},
     { path: '/profile', component: Profile},
     { path: '/signup', component: SignUp},
-    { path: '/trip', component: Trip}
+    { path: '/trip/:tripId', component: Trip}
 ];
 
 export {

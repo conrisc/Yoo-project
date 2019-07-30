@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import { TripService } from '../services';
 
 class Searcher extends React.Component {
@@ -7,11 +9,11 @@ class Searcher extends React.Component {
     constructor(props) {
         super(props);
 
-        const ts = new TripService();
         this.state = {
             trips: []
         }
 
+        const ts = new TripService();
         ts.getTrips()
             .then(data => {
                 this.setState({ trips: data.trips });
@@ -52,7 +54,7 @@ class Searcher extends React.Component {
                                 Accommodation: {el.accommodation}<br />
                             </div>
                             <div className="col">
-                                <button className="btn btn-sm btn-outline-primary">Check this out!</button>
+                                <Link to={`/trip/${el._id}`} className="btn btn-primary btn-sm">Check this out!</Link>
                             </div>
                         </div>
                     })
