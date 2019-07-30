@@ -4,7 +4,7 @@ import { MongoService } from './mongoService.ts';
 let ms = new MongoService();
 
 class TripService {
-    public create(req: express.Request, res: express.Response) {
+    public createTrip(req: express.Request, res: express.Response) {
         const data = req.body;
         ms.insert('trips', data)
             .then(() => {
@@ -12,6 +12,15 @@ class TripService {
                     'msg': 'Trip has been added!',
                     'status': 201
                 });
+            })
+    }
+
+    public getTrips(req: express.Request, res: express.Response) {
+        ms.find('trips', {})
+            .then((trips: []) => {
+                res.send({
+                    'trips': trips
+                })
             })
     }
 }

@@ -1,9 +1,20 @@
 class TripService {
     constructor() {}
 
+    public getTrips() {
+        return this.getData('http://localhost:3001/trips')
+    }
+
     public createTrip(data) {
-        console.log(data);
         return this.postData('http://localhost:3001/trip/create', data);
+    }
+
+    private getData(url = '') {
+        return fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+        })
+        .then(response => response.json());
     }
 
     private postData(url = '', data = {}) {
@@ -20,7 +31,7 @@ class TripService {
             referrer: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(data), // body data type must match "Content-Type" header
         })
-        .then(response => {console.log(response); return response.json()}); // parses JSON response into native JavaScript objects
+        .then(response => response.json()); // parses JSON response into native JavaScript objects
     }
 }
 
