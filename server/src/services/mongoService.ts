@@ -51,6 +51,16 @@ class MongoService {
             })
     }
 
+    public update(collectionName: string, criteria: any, data: any) {
+        return this.getDb()
+            .then(db => {
+                // @ts-ignore
+                const collection = db.collection(collectionName);
+                return collection.updateOne(criteria, { $set: data });
+
+            })
+    }
+
     // @ts-ignore
     public deleteOne(collectionName: string, data) {
         return this.getDb()

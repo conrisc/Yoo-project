@@ -6,7 +6,7 @@ class TripService {
     }
 
     public getUserTrips(author) {
-        return this.postData(`http://localhost:3001/trips/user`, {author})
+        return this.postData(`http://localhost:3001/trips/user`, {author});
     }
 
     public getTrip(id) {
@@ -15,6 +15,22 @@ class TripService {
 
     public createTrip(data) {
         return this.postData('http://localhost:3001/trip/create', data);
+    }
+
+    public requestTrip(data) {
+        return this.postData('http://localhost:3001/trip/request/ask', data);
+    }
+
+    public updateRequestTrip(data) {
+        return this.postData('http://localhost:3001/trip/request/update', data);
+    }
+
+    public removeRequestTrip(data) {
+        return this.postData('http://localhost:3001/trip/request/remove', data);
+    }
+
+    public getRequests(data) {
+        return this.postData('http://localhost:3001/trip/requests', data);
     }
 
     private getData(url = '') {

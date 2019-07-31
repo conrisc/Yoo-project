@@ -9,8 +9,12 @@ function injectAPI(app: express.Application) {
     app.post('/signup', services.signUp);
     app.post('/isloggedin', services.isLoggedIn);
     app.post('/trip/create', ts.createTrip);
-    app.get('/trips', ts.getTrips);
     app.get('/trip/:tripId', ts.getTrip);
+    app.post('/trip/request/ask', ts.requestTrip);
+    app.post('/trip/request/update', ts.updateRequestTrip);
+    app.post('/trip/request/remove', ts.removeRequestTrip);
+    app.post('/trip/requests', ts.getTripRequests);
+    app.get('/trips', ts.getTrips);
     app.post('/trips/user', ts.getUserTrips);
 }
 
