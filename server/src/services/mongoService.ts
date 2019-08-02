@@ -57,8 +57,25 @@ class MongoService {
                 // @ts-ignore
                 const collection = db.collection(collectionName);
                 return collection.updateOne(criteria, { $set: data });
-
             })
+    }
+
+    public push(collectionName: string, criteria: any, data: any) {
+        return this.getDb()
+            .then(db => {
+                // @ts-ignore
+                const collection = db.collection(collectionName);
+                return collection.updateOne(criteria, { $push: data });
+            });
+    }
+
+    public pull(collectionName: string, criteria: any, data: any) {
+        return this.getDb()
+            .then(db => {
+                // @ts-ignore
+                const collection = db.collection(collectionName);
+                return collection.updateOne(criteria, { $pull: data });
+            });
     }
 
     // @ts-ignore

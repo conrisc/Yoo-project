@@ -50,13 +50,22 @@ class TripService {
     public updateRequestTrip(req: express.Request, res: express.Response) {
         const { requestId, status} = req.body;
         const id = new ObjectId(requestId);
-        ms.update('tripRequests', { _id: id }, { status })
-            .then(() => {
-                res.send({
-                    'msg': 'Request has been updated!',
-                    'status': 200
+        if (status === 'approved')
+            ms.find('tripRequests', { _id: id })
+                .then(requests => {
+                    const { login, tripId } = requests[0];
+                    const id2 = new ObjectId(tripId);
+                    ms.deleteOne('tripRequests', { _id: id });
+                    ms.push('trips', { _id: id2 }, { participants: login })
                 })
-            })
+        else
+            ms.update('tripRequests', { _id: id }, { status })
+                .then(() => {
+                    res.send({
+                        'msg': 'Request has been updated!',
+                        'status': 200
+                    })
+                })
     }
 
     public removeRequestTrip(req: express.Request, res: express.Response) {
@@ -88,6 +97,18 @@ class TripService {
                     'trips': trips
                 });
             });
+    }
+
+    public removeParticipant(req: express.Request, res: express.Response) {
+        const { tripId, login } = req.body;
+        const id = new ObjectId(tripId);
+        console.log(id, login);
+        ms.pull('trips', { _id: id }, { participants: login })
+            .then((e) => {
+                res.send({
+                    'status': 200
+                })
+            })
     }
 }
 

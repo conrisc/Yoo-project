@@ -95,7 +95,7 @@ class TripCreator extends React.Component {
             accommodation: this.state.accommodation,
             startDate: this.state.startDate,
             endDate: this.state.endDate,
-            tripDescrpition: this.state.tripDescription,
+            description: this.state.tripDescription,
             author: this.state.author
 
         };

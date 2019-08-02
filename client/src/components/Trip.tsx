@@ -35,7 +35,7 @@ class Trip extends React.Component {
     signForTrip() {
         const data = {
             login: this.props.login,
-            tripId: this.props.match.params.tripId,
+            tripId: this.state.trip._id,
             requestSubstantiation: this.state.requestSubstantiation
         }
         ts.requestTrip(data)
@@ -53,6 +53,10 @@ class Trip extends React.Component {
 
     rejectRequest(requestId) {
         ts.updateRequestTrip({requestId, status: 'rejected'});
+    }
+
+    removeParticipant(login) {
+        ts.removeParticipant({tripId: this.state.trip._id, login});
     }
 
     render() {
@@ -109,9 +113,10 @@ class Trip extends React.Component {
                         </div>
                     </div>
                     <div className="col"></div>
+                    { this.props.login !== trip.author &&
                     <div className="col-auto">
                         <button className="btn btn-primary btn-sm m-3" data-toggle="modal" data-target="#exampleModal">Sign for the trip</button>
-                    </div>
+                    </div>}
                 </div>
                 <div className="row">
                     <div className="col-auto">
@@ -131,8 +136,9 @@ class Trip extends React.Component {
                         {trip.description}
                     </div>
                 </div>
-                { this.props.login === trip.author && <div className="row m-2">
-                    <div className="col">
+                { this.props.login === trip.author &&
+                <div className="m-2">
+                    <div>
                         <div className="row shadow-sm p-2 my-4 bg-light">
                             <div className="col">
                                 <h5 className="m-0">Pending requests</h5>
@@ -153,6 +159,25 @@ class Trip extends React.Component {
                         }): <div className="row">
                             <div className="col">
                                 <span>There are no pending requests</span>
+                            </div>
+                        </div>}
+                    </div>
+                    <div>
+                        <div className="row shadow-sm p-2 my-4 bg-light">
+                            <div className="col">
+                                <h5 className="m-0">Participants</h5>
+                            </div>
+                        </div>
+                        {this.state.trip.participants && this.state.trip.participants.length > 0 ? this.state.trip.participants.map((login, index) => {
+                            return <div key={index} className="row">
+                                <div className="col">{login}</div>
+                                <div className="col">
+                                    <button className="btn btn-danger btn-sm m-1" onClick={() => this.removeParticipant(login)}>Remove</button>
+                                </div>
+                            </div>
+                        }): <div className="row">
+                            <div className="col">
+                                <span>There are no participants</span>
                             </div>
                         </div>}
                     </div>

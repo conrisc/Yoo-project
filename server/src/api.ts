@@ -16,6 +16,7 @@ function injectAPI(app: express.Application) {
     app.post('/trip/requests', ts.getTripRequests);
     app.get('/trips', ts.getTrips);
     app.post('/trips/user', ts.getUserTrips);
+    app.post('/trip/participant/remove', ts.removeParticipant);
 }
 
 export {

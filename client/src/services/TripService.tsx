@@ -33,6 +33,10 @@ class TripService {
         return this.postData('http://localhost:3001/trip/requests', data);
     }
 
+    public removeParticipant(data) {
+        return this.postData('http://localhost:3001/trip/participant/remove', data);
+    }
+
     private getData(url = '') {
         return fetch(url, {
             method: 'GET',
