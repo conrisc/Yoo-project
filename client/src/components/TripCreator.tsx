@@ -48,9 +48,9 @@ class TripCreator extends React.Component {
     findDirection(event) {
         event.preventDefault();
 
-        const directionsDisplay = new google.maps.DirectionsRenderer;
+        const directionsDisplay = new google.maps.DirectionsRenderer();
         directionsDisplay.setMap(this.map);
-        const directionService = new google.maps.DirectionsService;
+        const directionService = new google.maps.DirectionsService();
         directionService.route({
             origin: this.state.startingPoint,
             destination: this.state.destinationPoint,

@@ -1,8 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+
 import { TripService } from '../services';
-        const ts = new TripService();
+const ts = new TripService();
+
+const ws = new WebSocket('ws://localhost:3001');
 
 class Trip extends React.Component {
     readonly state;
@@ -58,6 +61,40 @@ class Trip extends React.Component {
     removeParticipant(login) {
         ts.removeParticipant({tripId: this.state.trip._id, login});
     }
+
+    onEditorStateChange = (event) => {
+        ws.send(JSON.stringify({
+            type: "contentchange",
+            username: this.props.login,
+            content: event.target.value 
+        }));
+    };
+
+    componentWillMount() {
+        ws.onopen = () => {
+            console.log('WebSocket Client Connected');
+        };
+        ws.onmessage = (message) => {
+            const dataFromServer = JSON.parse(message.data);
+            const stateToChange: any = {};
+            if (dataFromServer.type === "contentchange") {
+                stateToChange.text = dataFromServer.data.message  || '';
+            }
+            this.setState({
+                ...stateToChange
+            });
+        };
+    }
+
+  showEditorSection = () => (
+        <div className="main-content">
+            <div className="document-holder">
+                <textarea onChange={e => this.onEditorStateChange(e)}>
+                </textarea>
+                {this.state.text}
+            </div>
+        </div>
+    )
 
     render() {
         const trip = this.state.trip;
@@ -123,12 +160,31 @@ class Trip extends React.Component {
                         <img className="trip-img" src="https://wallpapershome.com/images/pages/pic_h/666.jpg"></img>
                     </div>
                     <div className="col-3">
-                        Transport: {trip.transport}<br />
-                        Type of transport: {trip.transportType}<br />
-                        Number of people: {trip.numberOfPeople}<br />
-                        Available slots: 2<br />
-                        Accommodation: {trip.accommodation}<br />
-                        Host: {trip.author}<br />
+                        <ul className="nav nav-tabs" role="tablist">
+                            <li className="nav-item">
+                                <a className="nav-link active" id="details-tab" data-toggle="tab"
+                                href="#details" role="tab" aria-controls="details" aria-selected="true">Details</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" id="chat-tab" data-toggle="tab"
+                                 href="#chat" role="tab" aria-controls="chat" aria-selected="false">Chat</a>
+                            </li>
+                        </ul>
+                        <div className="tab-content" id="myTabContent">
+                            <div className="tab-pane fade show active" id="details"
+                                role="tabpanel" aria-labelledby="details-tab">
+                                Transport: {trip.transport}<br />
+                                Type of transport: {trip.transportType}<br />
+                                Number of people: {trip.numberOfPeople}<br />
+                                Available slots: 2<br />
+                                Accommodation: {trip.accommodation}<br />
+                                Host: {trip.author}<br />
+                            </div>
+                            <div className="tab-pane fade" id="chat"
+                                role="tabpanel" aria-labelledby="chat-tab">
+                                    {this.showEditorSection()}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
