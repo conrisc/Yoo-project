@@ -5,14 +5,15 @@ import { connect } from 'react-redux';
 import { TripService } from '../services';
 const ts = new TripService();
 
-const ws = new WebSocket('ws://localhost:3001');
 
 const dataTypes = {
-    NEW_MESSAGE: 'new_message'
+    NEW_MESSAGE: 'new_message',
+    JOIN_CHAT: 'join_chat'
 }
 
 class Trip extends React.Component {
     readonly state;
+    ws: WebSocket;
 
     constructor(readonly props) {
         super(props);
@@ -26,6 +27,8 @@ class Trip extends React.Component {
             message: '',
             conversation: []
         }
+
+        this.ws = new WebSocket('ws://localhost:3001');
 
         ts.getTrip(this.props.match.params.tripId)
             .then(data => {
@@ -77,9 +80,10 @@ class Trip extends React.Component {
             type: dataTypes.NEW_MESSAGE,
             username: this.props.login,
             message: this.state.message,
+            date: Date(),
             tripId: this.props.match.params.tripId
         };
-        ws.send(JSON.stringify(data));
+        this.ws.send(JSON.stringify(data));
         this.putToConversation(data);
     }
 
@@ -89,12 +93,19 @@ class Trip extends React.Component {
 
 
     componentWillMount() {
-        ws.onopen = () => {
+        this.ws.onopen = () => {
             console.log('WebSocket Client Connected');
+            const data = {
+                type: dataTypes.JOIN_CHAT,
+                username: this.props.login,
+                tripId: this.props.match.params.tripId
+            }
+            this.ws.send(JSON.stringify(data));
         };
-        ws.onmessage = (message) => {
+        this.ws.onmessage = (message) => {
             const dataFromServer = JSON.parse(message.data);
-            if (dataFromServer.type === dataTypes.NEW_MESSAGE) {
+            if (dataFromServer.type === dataTypes.NEW_MESSAGE &&
+                dataFromServer.tripId === this.props.match.params.tripId) {
                 this.putToConversation(dataFromServer);
             }
         };
@@ -104,7 +115,9 @@ class Trip extends React.Component {
         <div>
             <div>
                 {this.state.conversation.map((data, index) => {
-                    return <p key={index}>{data.username}: {data.message}</p>
+                    const time = new Date(data.date);
+                    const formatedTime = `${time.getDate()}.${time.getMonth()+1}.${time.getFullYear()} ${time.getHours()}:${time.getMinutes()}`;
+                    return <p key={index}>{formatedTime} {data.username}: {data.message}</p>
                 })}
             </div>
             <textarea onChange={e => this.onEditorStateChange(e)}></textarea>
