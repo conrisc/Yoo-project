@@ -7,6 +7,10 @@ const ts = new TripService();
 
 const ws = new WebSocket('ws://localhost:3001');
 
+const dataTypes = {
+    NEW_MESSAGE: 'new_message'
+}
+
 class Trip extends React.Component {
     readonly state;
 
@@ -18,7 +22,9 @@ class Trip extends React.Component {
             requests: [],
             requestResponse: '',
             isRequestPending: false,
-            requestSubstantiation: ''
+            requestSubstantiation: '',
+            message: '',
+            conversation: []
         }
 
         ts.getTrip(this.props.match.params.tripId)
@@ -62,13 +68,25 @@ class Trip extends React.Component {
         ts.removeParticipant({tripId: this.state.trip._id, login});
     }
 
-    onEditorStateChange = (event) => {
-        ws.send(JSON.stringify({
-            type: "contentchange",
+    onEditorStateChange(event) {
+        this.setState({ message: event.target.value });
+    }
+
+    sendMessege() {
+        const data = {
+            type: dataTypes.NEW_MESSAGE,
             username: this.props.login,
-            content: event.target.value 
-        }));
-    };
+            message: this.state.message,
+            tripId: this.props.match.params.tripId
+        };
+        ws.send(JSON.stringify(data));
+        this.putToConversation(data);
+    }
+
+    putToConversation(data) {
+        this.setState({ conversation: [...this.state.conversation, data]});
+    }
+
 
     componentWillMount() {
         ws.onopen = () => {
@@ -76,23 +94,21 @@ class Trip extends React.Component {
         };
         ws.onmessage = (message) => {
             const dataFromServer = JSON.parse(message.data);
-            const stateToChange: any = {};
-            if (dataFromServer.type === "contentchange") {
-                stateToChange.text = dataFromServer.data.message  || '';
+            if (dataFromServer.type === dataTypes.NEW_MESSAGE) {
+                this.putToConversation(dataFromServer);
             }
-            this.setState({
-                ...stateToChange
-            });
         };
     }
 
   showEditorSection = () => (
-        <div className="main-content">
-            <div className="document-holder">
-                <textarea onChange={e => this.onEditorStateChange(e)}>
-                </textarea>
-                {this.state.text}
+        <div>
+            <div>
+                {this.state.conversation.map((data, index) => {
+                    return <p key={index}>{data.username}: {data.message}</p>
+                })}
             </div>
+            <textarea onChange={e => this.onEditorStateChange(e)}></textarea>
+            <button onClick={() => this.sendMessege()}>Send</button>
         </div>
     )
 

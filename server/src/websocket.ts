@@ -18,8 +18,8 @@ function injectConfiguration(wss: WebSocket.Server) {
         });
     }
 
-    const typesDef = {
-        CONTENT_CHANGE: "contentchange"
+    const dataTypes = {
+        NEW_MESSAGE: 'new_message'
     }
 
     wss.on('connection', function (ws: WebSocket) {
@@ -29,17 +29,11 @@ function injectConfiguration(wss: WebSocket.Server) {
             console.log(message);
             const dataFromClient = JSON.parse(message);
             const json: any = { type: dataFromClient.type };
-            if (dataFromClient.type === typesDef.CONTENT_CHANGE) {
-                json.data = { message: dataFromClient.content };
+            if (dataFromClient.type === dataTypes.NEW_MESSAGE) {
+                json.message = dataFromClient.message;
+                json.username = dataFromClient.username;
             }
             sendMessage(JSON.stringify(json), ws);
-        });
-
-        wss.on('close', function(connection: any) {
-          console.log('connection closed')
-          const json: any = { type: typesDef.CONTENT_CHANGE };
-          json.data = { message: 'User has disconnected!'};
-          sendMessage(JSON.stringify(json), ws);
         });
     });
 }
