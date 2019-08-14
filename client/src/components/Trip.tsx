@@ -11,9 +11,14 @@ const dataTypes = {
     JOIN_CHAT: 'join_chat'
 }
 
+const keys = {
+    ENTER: 'Enter'
+}
+
 class Trip extends React.Component {
     readonly state;
     ws: WebSocket;
+    messageBoxRef: React.RefObject<any>;
 
     constructor(readonly props) {
         super(props);
@@ -24,11 +29,11 @@ class Trip extends React.Component {
             requestResponse: '',
             isRequestPending: false,
             requestSubstantiation: '',
-            message: '',
             conversation: []
         }
 
         this.ws = new WebSocket('ws://localhost:3001');
+        this.messageBoxRef = React.createRef();
 
         ts.getTrip(this.props.match.params.tripId)
             .then(data => {
@@ -76,15 +81,17 @@ class Trip extends React.Component {
     }
 
     sendMessege() {
+        const messageBox = this.messageBoxRef.current;
         const data = {
             type: dataTypes.NEW_MESSAGE,
             username: this.props.login,
-            message: this.state.message,
+            message: messageBox.value,
             date: Date(),
             tripId: this.props.match.params.tripId
         };
         this.ws.send(JSON.stringify(data));
         this.putToConversation(data);
+        messageBox.value = '';
     }
 
     putToConversation(data) {
@@ -111,17 +118,35 @@ class Trip extends React.Component {
         };
     }
 
-  showEditorSection = () => (
+    handleKeyPressed(event) {
+        if (event.key === keys.ENTER) {
+            event.preventDefault();
+            this.sendMessege();
+        }
+    }
+
+    showEditorSection = () => (
         <div>
-            <div>
-                {this.state.conversation.map((data, index) => {
-                    const time = new Date(data.date);
-                    const formatedTime = `${time.getDate()}.${time.getMonth()+1}.${time.getFullYear()} ${time.getHours()}:${time.getMinutes()}`;
-                    return <p key={index}>{formatedTime} {data.username}: {data.message}</p>
-                })}
+            <div className="m-2 font-weight-light">
+                {this.state.conversation.length > 0 ?
+                    this.state.conversation.map((data, index) => {
+                        const time = new Date(data.date);
+                        const formatedTime = `${time.getDate()}.${time.getMonth()+1}.${time.getFullYear()} ${time.getHours()}:${time.getMinutes()}`;
+                        return <span className="d-block" key={index}>{formatedTime} {data.username}: {data.message}</span>
+                    })
+                    :
+                    <span className="text-primary">This chat is empty</span>
+                }
             </div>
-            <textarea onChange={e => this.onEditorStateChange(e)}></textarea>
-            <button onClick={() => this.sendMessege()}>Send</button>
+            <div className="form-group mt-2">
+                <textarea
+                    ref={this.messageBoxRef}
+                    className="form-control"
+                    rows={2}
+                    onKeyDown={e => this.handleKeyPressed(e)}>
+                </textarea>
+            </div>
+            <button className="btn btn-primary" onClick={() => this.sendMessege()}>Send</button>
         </div>
     )
 
