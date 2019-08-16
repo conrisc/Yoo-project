@@ -29,7 +29,8 @@ class Trip extends React.Component {
             requestResponse: '',
             isRequestPending: false,
             requestSubstantiation: '',
-            conversation: []
+            conversation: [],
+            isMessageBoxEmpty: true
         }
 
         this.ws = new WebSocket('ws://localhost:3001');
@@ -76,22 +77,27 @@ class Trip extends React.Component {
         ts.removeParticipant({tripId: this.state.trip._id, login});
     }
 
-    onEditorStateChange(event) {
-        this.setState({ message: event.target.value });
-    }
-
     sendMessege() {
         const messageBox = this.messageBoxRef.current;
-        const data = {
-            type: dataTypes.NEW_MESSAGE,
-            username: this.props.login,
-            message: messageBox.value,
-            date: Date(),
-            tripId: this.props.match.params.tripId
-        };
-        this.ws.send(JSON.stringify(data));
-        this.putToConversation(data);
-        messageBox.value = '';
+        if (messageBox.value !== '') {
+            const data = {
+                type: dataTypes.NEW_MESSAGE,
+                username: this.props.login,
+                message: messageBox.value,
+                date: Date(),
+                tripId: this.props.match.params.tripId
+            };
+            this.ws.send(JSON.stringify(data));
+            this.putToConversation(data);
+            this.clearMessageBox();
+        }
+    }
+
+    clearMessageBox() {
+        if (this.messageBoxRef.current !== null)
+            this.messageBoxRef.current.value = '';
+
+        this.setState({ isMessageBoxEmpty: true });
     }
 
     putToConversation(data) {
@@ -125,14 +131,19 @@ class Trip extends React.Component {
         }
     }
 
-    showEditorSection = () => (
-        <div>
-            <div className="m-2 font-weight-light">
+    handleMessageBoxChange(event) {
+        const isMessageBoxEmpty = event.target.value  === '';
+        if (this.state.isMessageBoxEmpty !== isMessageBoxEmpty)
+            this.setState({ isMessageBoxEmpty });
+    }
+
+    showChatBox = () => (
+        <div className="">
+            <div className="m-2 font-weight-light overflow-auto conversation-box">
                 {this.state.conversation.length > 0 ?
                     this.state.conversation.map((data, index) => {
-                        const time = new Date(data.date);
-                        const formatedTime = `${time.getDate()}.${time.getMonth()+1}.${time.getFullYear()} ${time.getHours()}:${time.getMinutes()}`;
-                        return <span className="d-block" key={index}>{formatedTime} {data.username}: {data.message}</span>
+                        const formatedTime = this.getFormatedDate(new Date(data.date));
+                        return <span className="d-block" key={index}>{formatedTime} <span className="font-weight-bold">{data.username}</span>: {data.message}</span>
                     })
                     :
                     <span className="text-primary">This chat is empty</span>
@@ -143,12 +154,29 @@ class Trip extends React.Component {
                     ref={this.messageBoxRef}
                     className="form-control"
                     rows={2}
-                    onKeyDown={e => this.handleKeyPressed(e)}>
+                    onKeyDown={e => this.handleKeyPressed(e)}
+                    onChange={e => this.handleMessageBoxChange(e)}>
                 </textarea>
             </div>
-            <button className="btn btn-primary" onClick={() => this.sendMessege()}>Send</button>
+            <button className="btn btn-primary" onClick={() => this.sendMessege()} disabled={this.state.isMessageBoxEmpty}>Send</button>
         </div>
     )
+
+    getFormatedDate(fullDate: Date) {
+        const date = [fullDate.getDate(), fullDate.getMonth()+1, fullDate.getFullYear()];
+        const time = [fullDate.getHours(), fullDate.getMinutes()].map(el => {
+            return ('0' + el).slice(-2);
+        });
+
+        return date.join('.') + ' ' + time.join(':');
+    }
+
+    getDisabledClass() {
+        const trip = this.state.trip;
+        return trip.author === this.props.login ||
+            (trip.participants && trip.participants.find(el => el === this.props.login)) ?
+            '' : 'disabled';
+    }
 
     render() {
         const trip = this.state.trip;
@@ -209,18 +237,18 @@ class Trip extends React.Component {
                         <button className="btn btn-primary btn-sm m-3" data-toggle="modal" data-target="#exampleModal">Sign for the trip</button>
                     </div>}
                 </div>
-                <div className="row">
+                <div className="row trip-info">
                     <div className="col-auto">
                         <img className="trip-img" src="https://wallpapershome.com/images/pages/pic_h/666.jpg"></img>
                     </div>
-                    <div className="col-3">
+                    <div className="col-4">
                         <ul className="nav nav-tabs" role="tablist">
                             <li className="nav-item">
                                 <a className="nav-link active" id="details-tab" data-toggle="tab"
                                 href="#details" role="tab" aria-controls="details" aria-selected="true">Details</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" id="chat-tab" data-toggle="tab"
+                                <a className={'nav-link ' + this.getDisabledClass() } id="chat-tab" data-toggle="tab"
                                  href="#chat" role="tab" aria-controls="chat" aria-selected="false">Chat</a>
                             </li>
                         </ul>
@@ -236,7 +264,7 @@ class Trip extends React.Component {
                             </div>
                             <div className="tab-pane fade" id="chat"
                                 role="tabpanel" aria-labelledby="chat-tab">
-                                    {this.showEditorSection()}
+                                    {this.showChatBox()}
                             </div>
                         </div>
                     </div>

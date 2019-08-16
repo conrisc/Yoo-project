@@ -37,6 +37,14 @@
 	width: 900px;
 }
 
+.trip-info {
+	height: 520px;
+}
+
+.conversation-box {
+	height: 330px;
+}
+
 .yoo-hide {
 	animation-name: slide-up;
 	animation-duration: 0.5s;
