@@ -45,6 +45,27 @@
 	height: 330px;
 }
 
+.input-file {
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1;
+	width: 0.1px;
+	height: 0.1px;
+}
+
+.img-preview {
+	width: 100px;
+}
+
+.label-input-file {
+	cursor: pointer;
+	z-index: 2;
+}
+
 .yoo-hide {
 	animation-name: slide-up;
 	animation-duration: 0.5s;

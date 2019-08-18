@@ -12,11 +12,14 @@ class TripCreator extends React.Component {
     readonly state;
     map;
     mapRef;
+    uploadImagesInputRef;
 
     constructor(readonly props) {
         super(props);
 
         this.mapRef = React.createRef();
+        this.uploadImagesInputRef = React.createRef();
+
         this.state = {
             startingPoint: '',
             destinationPoint: '',
@@ -28,7 +31,8 @@ class TripCreator extends React.Component {
             endDate: '',
             tripDescrpition: '',
             transportTypeClass: 'yoo-hide',
-            author: this.props.login
+            author: this.props.login,
+            previewImages: []
         }
     }
 
@@ -102,11 +106,50 @@ class TripCreator extends React.Component {
         new TripService().createTrip(data);
     }
 
+    showFiles() {
+        const files = this.state.previewImages;
+        const imgPreviewElements: JSX.Element[] = [];
+        for (let i = 0; i < files.length ; i++) {
+            const url = URL.createObjectURL(files[i]);
+            imgPreviewElements.push(
+                <div key={i} className="carousel-item bg-dark">
+                    <img className="d-block container-75vh mx-auto" src={url}></img>
+                </div>
+            );
+        }
+
+        return imgPreviewElements;
+    }
+
+    uploadFiles(event) {
+        const el = event.target;
+        this.setState({ previewImages: el.files });
+    }
+
+    showSth() {
+        return <div id="carouselExampleControls" className="carousel slide col-9 container-75vh" data-ride="carousel">
+            <div className="carousel-inner">
+                <div className="carousel-item active">
+                    <div ref={this.mapRef} className="d-block w-100 container-75vh"></div>
+                </div>
+                {this.showFiles()}
+            </div>
+            <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span className="sr-only">Previous</span>
+            </a>
+            <a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                <span className="sr-only">Next</span>
+            </a>
+        </div>;
+    }
+
     render() {
         return (
             <div>
                 <div className="row py-2">
-                    <div ref={this.mapRef} className="col-9 container-75vh"></div>
+                    {this.showSth()}
                     <form className="col simple-form">
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm" htmlFor="inputStart">Starting point</label>
@@ -162,6 +205,13 @@ class TripCreator extends React.Component {
                             <div className="form-group col w-50">
                                 <label className="col-form-label col-form-label-sm" htmlFor="inputReturn">Date of return</label>
                                 <input id="inputReturn" className="form-control form-control-sm" type="date" name="endDate" onChange={e => this.handleInputChange(e)} />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="form-group col">
+                                <label htmlFor="trip-creator-upload-img" className="label-input-file btn btn-primary btn-sm">Upload images</label>
+                                <input ref={this.uploadImagesInputRef} id="trip-creator-upload-img"
+                                    type="file" className="input-file" onChange={e => this.uploadFiles(e)} multiple accept="image/*" />
                             </div>
                         </div>
                     </form>
