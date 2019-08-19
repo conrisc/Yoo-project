@@ -90,6 +90,7 @@ class TripCreator extends React.Component {
     }
 
     createTrip() {
+        const formData = new FormData();
         const data = {
             startingPoint: this.state.startingPoint,
             destinationPoint: this.state.destinationPoint,
@@ -101,9 +102,16 @@ class TripCreator extends React.Component {
             endDate: this.state.endDate,
             description: this.state.tripDescription,
             author: this.state.author
-
         };
-        new TripService().createTrip(data);
+        for (const key in data) {
+            formData.append(key, data[key]);
+        }
+
+        for (let i = 0; i < this.state.previewImages.length; i++) {
+            formData.append(`image_${i}`, this.state.previewImages[i]);
+        }
+
+        new TripService().createTrip(formData);
     }
 
     showFiles() {
@@ -112,7 +120,7 @@ class TripCreator extends React.Component {
         for (let i = 0; i < files.length ; i++) {
             const url = URL.createObjectURL(files[i]);
             imgPreviewElements.push(
-                <div key={i} className="carousel-item bg-dark">
+                <div key={i} className="carousel-item">
                     <img className="d-block container-75vh mx-auto" src={url}></img>
                 </div>
             );
@@ -128,7 +136,7 @@ class TripCreator extends React.Component {
 
     showSth() {
         return <div id="carouselExampleControls" className="carousel slide col-9 container-75vh" data-ride="carousel">
-            <div className="carousel-inner">
+            <div className="carousel-inner bg-dark">
                 <div className="carousel-item active">
                     <div ref={this.mapRef} className="d-block w-100 container-75vh"></div>
                 </div>

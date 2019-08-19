@@ -14,7 +14,7 @@ class TripService {
     }
 
     public createTrip(data) {
-        return this.postData('http://localhost:3001/trip/create', data);
+        return this.postFormData('http://localhost:3001/trip/create', data);
     }
 
     public requestTrip(data) {
@@ -45,7 +45,7 @@ class TripService {
         .then(response => response.json());
     }
 
-    private postData(url = '', data = {}) {
+    private postData(url = '', data: any = new FormData()) {
         return fetch(url, {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, cors, *same-origin
@@ -61,6 +61,24 @@ class TripService {
         })
         .then(response => response.json()); // parses JSON response into native JavaScript objects
     }
+
+    private postFormData(url = '', data: any = new FormData()) {
+        return fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                // 'Content-Type': contentType,
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // no-referrer, *client
+            body: data, // body data type must match "Content-Type" header
+        })
+        .then(response => response.json()); // parses JSON response into native JavaScript objects
+    }
+
 }
 
 export {

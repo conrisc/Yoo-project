@@ -1,19 +1,36 @@
 import express from 'express';
-import { MongoService } from './mongoService.ts';
 import { ObjectId } from 'mongodb';
+import { IncomingForm } from 'formidable';
+import * as fs from 'fs';
+
+import { MongoService } from './mongoService.ts';
 
 let ms = new MongoService();
 
 class TripService {
     public createTrip(req: express.Request, res: express.Response) {
-        const data = req.body;
-        ms.insert('trips', data)
-            .then(() => {
-                res.send({
-                    'msg': 'Trip has been added!',
-                    'status': 201
-                });
-            })
+
+        let form = new IncomingForm();
+        form.parse(req, (err: any, fields: any, files: any) => {
+            const images = Object.values(files).map((img: any) => {
+                const fileBuffer = fs.readFileSync(img.path);
+                const imgBase64 = fileBuffer.toString('base64');
+                return imgBase64;
+            });
+
+            const data = {
+                ...fields,
+                images
+            }
+            ms.insert('trips', data)
+                .then(() => {
+                    res.send({
+                        'msg': 'Trip has been added!',
+                        'status': 201
+                    });
+                })
+
+        });
     }
 
     public getTrips(req: express.Request, res: express.Response) {

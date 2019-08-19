@@ -237,9 +237,27 @@ class Trip extends React.Component {
                         <button className="btn btn-primary btn-sm m-3" data-toggle="modal" data-target="#exampleModal">Sign for the trip</button>
                     </div>}
                 </div>
-                <div className="row trip-info">
-                    <div className="col-auto">
-                        <img className="trip-img" src="https://wallpapershome.com/images/pages/pic_h/666.jpg"></img>
+                <div className="row">
+                    <div className="col-8">
+                        <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
+                        <div className="carousel-inner bg-dark">
+                            {
+                                trip.images && trip.images.map((imageBase64, index) => {
+                                    return <div className={'carousel-item' + (index===0 ? ' active' : '')}>
+                                        <img src={`data:image/jpg;base64, ${imageBase64}`} className="d-block container-75vh mx-auto" />
+                                    </div>;
+                                })
+                            }
+                        </div>
+                        <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span className="sr-only">Previous</span>
+                        </a>
+                        <a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span className="sr-only">Next</span>
+                        </a>
+                        </div>
                     </div>
                     <div className="col-4">
                         <ul className="nav nav-tabs" role="tablist">
