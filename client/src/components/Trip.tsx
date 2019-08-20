@@ -240,11 +240,13 @@ class Trip extends React.Component {
                 <div className="row">
                     <div className="col-8">
                         <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
-                        <div className="carousel-inner bg-dark">
+                        <div className="carousel-inner bg-dark container-75vh">
+                            <div className="carousel-item active">
+                            </div>
                             {
                                 trip.images && trip.images.map((imageBase64, index) => {
-                                    return <div className={'carousel-item' + (index===0 ? ' active' : '')}>
-                                        <img src={`data:image/jpg;base64, ${imageBase64}`} className="d-block container-75vh mx-auto" />
+                                    return <div key={index} className="carousel-item h-100">
+                                        <img src={`data:image/jpg;base64, ${imageBase64}`} className="d-block mx-auto trip-img vertical-center" />
                                     </div>;
                                 })
                             }

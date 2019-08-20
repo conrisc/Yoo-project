@@ -120,8 +120,8 @@ class TripCreator extends React.Component {
         for (let i = 0; i < files.length ; i++) {
             const url = URL.createObjectURL(files[i]);
             imgPreviewElements.push(
-                <div key={i} className="carousel-item">
-                    <img className="d-block container-75vh mx-auto" src={url}></img>
+                <div key={i} className="carousel-item h-100">
+                    <img className="d-block mx-auto trip-img vertical-center" src={url}></img>
                 </div>
             );
         }
@@ -136,7 +136,7 @@ class TripCreator extends React.Component {
 
     showSth() {
         return <div id="carouselExampleControls" className="carousel slide col-9 container-75vh" data-ride="carousel">
-            <div className="carousel-inner bg-dark">
+            <div className="carousel-inner bg-dark container-75vh">
                 <div className="carousel-item active">
                     <div ref={this.mapRef} className="d-block w-100 container-75vh"></div>
                 </div>
