@@ -195,6 +195,24 @@ class Trip extends React.Component {
             '' : 'disabled';
     }
 
+    showParticipantsList() {
+        return (
+            <div>
+                {this.state.trip.participants && this.state.trip.participants.length > 0 ? this.state.trip.participants.map((login, index) => {
+                    return <div key={index} className="row">
+                        <div className="col">{login}</div>
+                        <div className="col">
+                            <button className="btn btn-danger btn-sm m-1" onClick={() => this.removeParticipant(login)}>Remove</button>
+                        </div>
+                    </div>
+                })
+                :
+                <span>There are no participants</span>
+                }
+            </div>
+        );
+    }
+
     render() {
         const trip = this.state.trip;
         return (
@@ -289,6 +307,10 @@ class Trip extends React.Component {
                                 <a className={'nav-link ' + this.getDisabledClass() } id="chat-tab" data-toggle="tab"
                                  href="#chat" role="tab" aria-controls="chat" aria-selected="false">Chat</a>
                             </li>
+                            <li className="nav-item">
+                                <a className={'nav-link ' + this.getDisabledClass() } id="chat-tab" data-toggle="tab"
+                                 href="#participants" role="tab" aria-controls="chat" aria-selected="false">Participants</a>
+                            </li>
                         </ul>
                         <div className="tab-content" id="myTabContent">
                             <div className="tab-pane fade show active" id="details"
@@ -303,6 +325,10 @@ class Trip extends React.Component {
                             <div className="tab-pane fade" id="chat"
                                 role="tabpanel" aria-labelledby="chat-tab">
                                     {this.showChatBox()}
+                            </div>
+                            <div className="tab-pane fade" id="participants"
+                                role="tabpanel" aria-labelledby="participants-tab">
+                                    {this.showParticipantsList()}
                             </div>
                         </div>
                     </div>
@@ -335,25 +361,6 @@ class Trip extends React.Component {
                         }): <div className="row">
                             <div className="col">
                                 <span>There are no pending requests</span>
-                            </div>
-                        </div>}
-                    </div>
-                    <div>
-                        <div className="row shadow-sm p-2 my-4 bg-light">
-                            <div className="col">
-                                <h5 className="m-0">Participants</h5>
-                            </div>
-                        </div>
-                        {this.state.trip.participants && this.state.trip.participants.length > 0 ? this.state.trip.participants.map((login, index) => {
-                            return <div key={index} className="row">
-                                <div className="col">{login}</div>
-                                <div className="col">
-                                    <button className="btn btn-danger btn-sm m-1" onClick={() => this.removeParticipant(login)}>Remove</button>
-                                </div>
-                            </div>
-                        }): <div className="row">
-                            <div className="col">
-                                <span>There are no participants</span>
                             </div>
                         </div>}
                     </div>
