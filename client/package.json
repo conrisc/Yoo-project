@@ -8,6 +8,7 @@
     "@types/react": "16.8.22",
     "@types/react-dom": "16.8.4",
     "@types/react-router-dom": "^4.3.4",
+    "awesome-debounce-promise": "^2.1.0",
     "bootstrap": "^4.3.1",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.9",

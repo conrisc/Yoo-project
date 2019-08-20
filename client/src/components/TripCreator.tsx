@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Debounce from 'awesome-debounce-promise';
 
 import { TripService } from '../services';
 
@@ -14,8 +15,15 @@ class TripCreator extends React.Component {
     mapRef;
     uploadImagesInputRef;
 
+    directionsDisplay;
+    flightPath;
+
+    updateMapDebounced;
+
     constructor(readonly props) {
         super(props);
+
+        this.updateMapDebounced = Debounce(() => this.updateMap(), 800);
 
         this.mapRef = React.createRef();
         this.uploadImagesInputRef = React.createRef();
@@ -41,44 +49,84 @@ class TripCreator extends React.Component {
             center: {lat: 48, lng: 17},
             zoom: 4
         });
+        this.directionsDisplay = new google.maps.DirectionsRenderer();
+
     }
 
-    handleInputChange(event) {
+    handleInputChange(event, callback = () => {}) {
         this.setState({
             [event.target.name]: event.target.value
-        });
+        }, callback);
     }
 
-    findDirection(event) {
-        event.preventDefault();
+    handleDirectionChange(event) {
+        this.handleInputChange(event, this.updateMapDebounced);
+    }
 
-        const directionsDisplay = new google.maps.DirectionsRenderer();
-        directionsDisplay.setMap(this.map);
+    updateMap() {
+        if (this.state.startingPoint && this.state.destinationPoint) {
+            this.updateGroundRoute();
+            this.updateFlightRoute();
+        } else if (this.state.startingPoint) {
+
+        } else if (this.state.destinationPoint) {
+
+        } else {
+
+        }
+    }
+
+    updateGroundRoute() {
         const directionService = new google.maps.DirectionsService();
         directionService.route({
             origin: this.state.startingPoint,
             destination: this.state.destinationPoint,
             travelMode: 'DRIVING'
             }, (response, status) => {
-            console.log(response);
-            console.log(response.routes[0].legs[0].end_location.lat());
-            var flightPlanCoordinates = [
-                {lat: response.routes[0].legs[0].start_location.lat(), lng: response.routes[0].legs[0].start_location.lng()},
-                {lat: response.routes[0].legs[0].end_location.lat(), lng: response.routes[0].legs[0].end_location.lng()},
-            ];
-            var flightPath = new google.maps.Polyline({
-                path: flightPlanCoordinates,
-                geodesic: true,
-                strokeColor: '#FF0000',
-                strokeOpacity: 1.0,
-                strokeWeight: 2
-            });
+                if (status === 'OK') {
+                    this.directionsDisplay.setDirections(response);
+                    this.directionsDisplay.setMap(this.map);
+                } else {
+                    this.directionsDisplay.setMap(null);
+                    window.alert('Directions request failed due to ' + status);
+                }
+        });
+    }
 
-            flightPath.setMap(this.map);
+    updateFlightRoute() {
+        const geocoder = new google.maps.Geocoder();
+
+        const second = (res) => {
+            geocoder.geocode({
+                'address': this.state.destinationPoint
+            }, (results, status) => {
+                if (status === 'OK') {
+                    var flightPlanCoordinates = [
+                        res[0].geometry.location,
+                        results[0].geometry.location
+                    ];
+                    this.flightPath = new google.maps.Polyline({
+                        path: flightPlanCoordinates,
+                        geodesic: true,
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
+                    });
+
+                    this.flightPath.setMap(this.map);
+                } else {
+                    alert('Geocode 2 was not successful for the following reason: ' + status);
+                }
+            });
+        };
+        geocoder.geocode({
+            'address': this.state.startingPoint
+        }, (results, status) => {
+            if (this.flightPath) this.flightPath.setMap(null);
             if (status === 'OK') {
-                directionsDisplay.setDirections(response);
+                second(results);
             } else {
-                window.alert('Directions request failed due to ' + status);
+                alert('Geocode was not successful for the following reason: ' + status);
             }
         });
     }
@@ -162,14 +210,13 @@ class TripCreator extends React.Component {
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm" htmlFor="inputStart">Starting point</label>
                             <input className="form-control form-control-sm" id="inputStart" 
-                            type="text" placeholder="What's your starting point?" name="startingPoint" onChange={e => this.handleInputChange(e)}/>
+                            type="text" placeholder="What's your starting point?" name="startingPoint" onChange={e => this.handleDirectionChange(e)}/>
                         </div>
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm" htmlFor="inputDestination">Destination</label>
                             <input className="form-control form-control-sm" id="inputDestination" type="text" placeholder="Where would you like to go?"
-                            name="destinationPoint" onChange={e => this.handleInputChange(e)} />
+                            name="destinationPoint" onChange={e => this.handleDirectionChange(e)} />
                         </div>
-                        <button onClick={e => this.findDirection(e)}>Find</button>
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm">Transport</label><br />
                             <div className="form-check form-check-inline">
