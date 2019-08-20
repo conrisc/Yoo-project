@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-
 import { TripService } from '../services';
 const ts = new TripService();
 
+// @ts-ignore
+const google = window.google;
 
 const dataTypes = {
     NEW_MESSAGE: 'new_message',
@@ -19,6 +20,8 @@ class Trip extends React.Component {
     readonly state;
     ws: WebSocket;
     messageBoxRef: React.RefObject<any>;
+    map;
+    mapRef: React.RefObject<any>;
 
     constructor(readonly props) {
         super(props);
@@ -35,6 +38,7 @@ class Trip extends React.Component {
 
         this.ws = new WebSocket('ws://localhost:3001');
         this.messageBoxRef = React.createRef();
+        this.mapRef = React.createRef();
 
         ts.getTrip(this.props.match.params.tripId)
             .then(data => {
@@ -122,6 +126,13 @@ class Trip extends React.Component {
                 this.putToConversation(dataFromServer);
             }
         };
+    }
+
+    componentDidMount() {
+        this.map = new google.maps.Map(this.mapRef.current, {
+            center: {lat: 48, lng: 17},
+            zoom: 4
+        });
     }
 
     handleKeyPressed(event) {
@@ -242,6 +253,7 @@ class Trip extends React.Component {
                         <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
                         <div className="carousel-inner bg-dark container-75vh">
                             <div className="carousel-item active">
+                                <div ref={this.mapRef} className="d-block w-100 container-75vh"></div>
                             </div>
                             {
                                 trip.images && trip.images.map((imageBase64, index) => {
