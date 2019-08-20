@@ -149,7 +149,7 @@ class Trip extends React.Component {
     }
 
     showChatBox = () => (
-        <div className="">
+        <div>
             <div className="m-2 font-weight-light overflow-auto conversation-box">
                 {this.state.conversation.length > 0 ?
                     this.state.conversation.map((data, index) => {
@@ -160,16 +160,22 @@ class Trip extends React.Component {
                     <span className="text-primary">This chat is empty</span>
                 }
             </div>
-            <div className="form-group mt-2">
-                <textarea
-                    ref={this.messageBoxRef}
-                    className="form-control"
-                    rows={2}
-                    onKeyDown={e => this.handleKeyPressed(e)}
-                    onChange={e => this.handleMessageBoxChange(e)}>
-                </textarea>
+            <div className="form-group m-2">
+                <div className="row">
+                    <div className="col">
+                        <textarea
+                            ref={this.messageBoxRef}
+                            className="form-control"
+                            rows={2}
+                            onKeyDown={e => this.handleKeyPressed(e)}
+                            onChange={e => this.handleMessageBoxChange(e)}>
+                        </textarea>
+                    </div>
+                    <div className="col-auto">
+                        <button className="btn btn-primary btn-sm mt-3" onClick={() => this.sendMessege()} disabled={this.state.isMessageBoxEmpty}>Send</button>
+                    </div>
+                </div>
             </div>
-            <button className="btn btn-primary" onClick={() => this.sendMessege()} disabled={this.state.isMessageBoxEmpty}>Send</button>
         </div>
     )
 
