@@ -88,7 +88,12 @@ class TripCreator extends React.Component {
                     this.directionsDisplay.setMap(this.map);
                 } else {
                     this.directionsDisplay.setMap(null);
-                    window.alert('Directions request failed due to ' + status);
+                    this.props.pushNotification({
+                        title: 'Location',
+                        time: 'some time ago',
+                        message: 'Directions request failed',
+                        type: 'danger'
+                    });
                 }
         });
     }
@@ -115,7 +120,12 @@ class TripCreator extends React.Component {
 
                     this.flightPath.setMap(this.map);
                 } else {
-                    alert('Geocode 2 was not successful for the following reason: ' + status);
+                    this.props.pushNotification({
+                        title: 'Location',
+                        time: 'some time ago',
+                        message: 'Couldn\'t find second location',
+                        type: 'danger'
+                    });
                 }
             });
         };
@@ -126,7 +136,12 @@ class TripCreator extends React.Component {
             if (status === 'OK') {
                 second(results);
             } else {
-                alert('Geocode was not successful for the following reason: ' + status);
+                this.props.pushNotification({
+                    title: 'Location',
+                    time: 'some time ago',
+                    message: 'Couldn\'t find first location',
+                    type: 'danger'
+                });
             }
         });
     }
@@ -291,8 +306,11 @@ class TripCreator extends React.Component {
 const mapStateToProps = (state) => {
   return { login: state.login };
 };
-const mapDispatchToProps = () => {
-  return {}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        pushNotification: (notification) => dispatch({ type: 'PUSH_NOTIFICATION', notification })
+    };
 };
 
 // @ts-ignore
