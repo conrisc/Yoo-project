@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { TimeSince } from './TimeSince';
+
 function Toast(props) {
     const [visibilityClass, setVisibilityClass] = useState('show');
     const toastRef: React.RefObject<any> = React.createRef();
@@ -14,7 +16,9 @@ function Toast(props) {
             <div className="toast-header">
                 <div className={`rounded-sm mr-2 bg-${props.notification.type} toast-icon`}></div>
                 <strong className="mr-auto">{props.notification.title}</strong>
-                <small className="text-muted ml-2">{props.notification.time}</small>
+                <small className="text-muted ml-2">
+                    <TimeSince since={props.notification.time} />
+                </small>
                 <button type="button" className="ml-2 mb-1 close" onClick={() => dismissNotification()}
                     data-dismiss="toast" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

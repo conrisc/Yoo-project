@@ -90,7 +90,7 @@ class TripCreator extends React.Component {
                     this.directionsDisplay.setMap(null);
                     this.props.pushNotification({
                         title: 'Location',
-                        time: 'some time ago',
+                        time: new Date(),
                         message: 'Directions request failed',
                         type: 'danger'
                     });
@@ -122,7 +122,7 @@ class TripCreator extends React.Component {
                 } else {
                     this.props.pushNotification({
                         title: 'Location',
-                        time: 'some time ago',
+                        time: new Date(),
                         message: 'Couldn\'t find second location',
                         type: 'danger'
                     });
@@ -138,7 +138,7 @@ class TripCreator extends React.Component {
             } else {
                 this.props.pushNotification({
                     title: 'Location',
-                    time: 'some time ago',
+                    time: new Date(),
                     message: 'Couldn\'t find first location',
                     type: 'danger'
                 });
