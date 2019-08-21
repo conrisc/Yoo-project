@@ -111,3 +111,7 @@
 	from { height: 0; bottom: 32px; }
 	to { height: 62px; bottom: 0; }
 }
+
+.fade-slow {
+	transition-duration: 0.4s;
+}
