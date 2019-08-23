@@ -22,6 +22,8 @@ class Trip extends React.Component {
     messageBoxRef: React.RefObject<any>;
     map;
     mapRef: React.RefObject<any>;
+    directionsDisplay;
+    flightPath;
 
     constructor(readonly props) {
         super(props);
@@ -42,7 +44,7 @@ class Trip extends React.Component {
 
         ts.getTrip(this.props.match.params.tripId)
             .then(data => {
-                this.setState({ trip: data.trip[0] });
+                this.setState({ trip: data.trip[0] }, () => this.updateMap());
             });
         ts.getRequests({ tripId: this.props.match.params.tripId })
             .then(data => {
@@ -52,6 +54,90 @@ class Trip extends React.Component {
 
     handleInputChange(event) {
         this.setState({ [event.target.name]: event.target.value });
+    }
+
+    updateMap() {
+        this.directionsDisplay = new google.maps.DirectionsRenderer();
+        if (this.state.trip.startingPoint && this.state.trip.destinationPoint) {
+            this.updateGroundRoute();
+            this.updateFlightRoute();
+        } else if (this.state.startingPoint) {
+
+        } else if (this.state.destinationPoint) {
+
+        } else {
+
+        }
+    }
+
+    updateGroundRoute() {
+        const directionService = new google.maps.DirectionsService();
+        directionService.route({
+            origin: this.state.trip.startingPoint,
+            destination: this.state.trip.destinationPoint,
+            travelMode: 'DRIVING'
+            }, (response, status) => {
+                if (status === 'OK') {
+                    this.directionsDisplay.setDirections(response);
+                    this.directionsDisplay.setMap(this.map);
+                } else {
+                    this.directionsDisplay.setMap(null);
+                    this.props.pushNotification({
+                        title: 'Location',
+                        time: new Date(),
+                        message: 'Directions request failed',
+                        type: 'danger'
+                    });
+                }
+        });
+    }
+
+    updateFlightRoute() {
+        const geocoder = new google.maps.Geocoder();
+
+        const second = (res) => {
+            geocoder.geocode({
+                'address': this.state.trip.destinationPoint
+            }, (results, status) => {
+                if (status === 'OK') {
+                    var flightPlanCoordinates = [
+                        res[0].geometry.location,
+                        results[0].geometry.location
+                    ];
+                    this.flightPath = new google.maps.Polyline({
+                        path: flightPlanCoordinates,
+                        geodesic: true,
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
+                    });
+
+                    this.flightPath.setMap(this.map);
+                } else {
+                    this.props.pushNotification({
+                        title: 'Location',
+                        time: new Date(),
+                        message: 'Couldn\'t find second location',
+                        type: 'danger'
+                    });
+                }
+            });
+        };
+        geocoder.geocode({
+            'address': this.state.trip.startingPoint
+        }, (results, status) => {
+            if (this.flightPath) this.flightPath.setMap(null);
+            if (status === 'OK') {
+                second(results);
+            } else {
+                this.props.pushNotification({
+                    title: 'Location',
+                    time: new Date(),
+                    message: 'Couldn\'t find first location',
+                    type: 'danger'
+                });
+            }
+        });
     }
 
     signForTrip() {
