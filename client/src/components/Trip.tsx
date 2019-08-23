@@ -282,7 +282,7 @@ class Trip extends React.Component {
                             {
                                 trip.images && trip.images.map((imageBase64, index) => {
                                     return <div key={index} className="carousel-item h-100">
-                                        <img src={`data:image/jpg;base64, ${imageBase64}`} className="d-block mx-auto trip-img vertical-center" />
+                                        <img src={`data:image/jpg;base64, ${imageBase64}`} className="d-block trip-img center-vh" />
                                     </div>;
                                 })
                             }

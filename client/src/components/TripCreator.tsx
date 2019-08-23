@@ -184,7 +184,7 @@ class TripCreator extends React.Component {
             const url = URL.createObjectURL(files[i]);
             imgPreviewElements.push(
                 <div key={i} className="carousel-item h-100">
-                    <img className="d-block mx-auto trip-img vertical-center" src={url}></img>
+                    <img className="d-block trip-img center-vh" src={url}></img>
                 </div>
             );
         }
