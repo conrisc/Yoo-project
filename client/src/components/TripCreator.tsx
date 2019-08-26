@@ -40,7 +40,8 @@ class TripCreator extends React.Component {
             tripDescrpition: '',
             transportTypeClass: 'yoo-hide',
             author: this.props.login,
-            previewImages: []
+            previewImages: [],
+            participants: []
         }
     }
 

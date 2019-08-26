@@ -54,14 +54,35 @@ class TripService {
 
     public requestTrip(req: express.Request, res: express.Response) {
         const { login, tripId, requestSubstantiation } = req.body;
+        const id = new ObjectId(tripId);
         const status = 'pending'
-        ms.insert('tripRequests', { login, tripId, requestSubstantiation, status })
-            .then(() => {
-                res.send({
-                    'msg': 'Request has been sent!',
-                    'status': 201
-                });
-            });
+        ms.find('trips', { _id: id, participants: login })
+            .then(trips => {
+                if (trips.length > 0 ) {
+                    res.send({
+                        'msg': 'You are already singed for this trip',
+                        'status': 304
+                    })
+                } else {
+                    ms.find('tripRequests', { login, tripId })
+                        .then(requests => {
+                            if (requests.length > 0) {
+                                res.send({
+                                    'msg': 'You are already singed for this trip',
+                                    'status': 304
+                                })
+                            } else {
+                                ms.insert('tripRequests', { login, tripId, requestSubstantiation, status })
+                                    .then(() => {
+                                        res.send({
+                                            'msg': 'Request has been sent!',
+                                            'status': 201
+                                        });
+                                    });
+                            }
+                        });
+                }
+            })
     }
 
     public updateRequestTrip(req: express.Request, res: express.Response) {
