@@ -20,6 +20,10 @@ class LoginService {
         sessionStorage.removeItem('token');
     }
 
+    public getUserData(credentials) {
+        return this.postData('http://localhost:3001/getuserdata', credentials);
+    }
+
     public isLoggedIn(credentials) {
         return this.postData('http://localhost:3001/isloggedin', credentials);
     }

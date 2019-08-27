@@ -67,7 +67,25 @@ function signUp(req: express.Request, res: express.Response) {
                     'status': 400
                 });
         });
+}
 
+function getUserData(req: express.Request, res: express.Response) {
+    const { login } = req.body;
+    ms.find('users', { login })
+        .then((items: any) => {
+            if (items.length === 1)
+                res.send({
+                    'login': login,
+                    'name': items[0].name,
+                    'lastName': items[0].lastName,
+                    'status': 200
+                });
+            else 
+                res.send({
+                    'login': login,
+                    'status': 400
+                });
+        });
 }
 
 function isLoggedIn(req: express.Request, res: express.Response) {
@@ -113,5 +131,6 @@ function createSessionToken(login: string): string {
 export {
     signIn,
     signUp,
+    getUserData,
     isLoggedIn
 }
