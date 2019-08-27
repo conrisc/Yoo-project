@@ -100,6 +100,11 @@
 	position: relative;
 }
 
+.avatar-l {
+	height: 80px;
+	width: 80px;
+}
+
 .footer {
 	box-shadow: 0px -2px 2px rgb(230,230,230);
 }
@@ -125,3 +130,5 @@
 .fade-slow {
 	transition-duration: 0.4s;
 }
+
+
