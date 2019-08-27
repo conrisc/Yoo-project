@@ -281,15 +281,22 @@ class Trip extends React.Component {
             '' : 'disabled';
     }
 
+    shouldDisplayRequestAction() {
+        const trip = this.state.trip;
+        return this.props.login !== trip.author && 
+            (!trip.participants || !trip.participants.find(el => el === this.props.login) );
+    }
+
     showParticipantsList() {
+        const trip = this.state.trip
         return (
             <div>
-                {this.state.trip.participants && this.state.trip.participants.length > 0 ? this.state.trip.participants.map((login, index) => {
+                {trip.participants && trip.participants.length > 0 ? trip.participants.map((login, index) => {
                     return <div key={index} className="row">
                         <div className="col">{login}</div>
-                        <div className="col">
+                        {trip.author === this.props.login && <div className="col">
                             <button className="btn btn-danger btn-sm m-1" onClick={() => this.removeParticipant(login)}>Remove</button>
-                        </div>
+                        </div>}
                     </div>
                 })
                 :
@@ -297,6 +304,16 @@ class Trip extends React.Component {
                 }
             </div>
         );
+    }
+
+    getRequestAction() {
+        const myRequest = this.state.requests.find(el => el.login === this.props.login);
+        if (!myRequest)
+            return <button className="btn btn-primary btn-sm m-3" data-toggle="modal" data-target="#exampleModal">Sign for the trip</button>;
+        else if (myRequest.status === 'pending')
+            return <button className="btn btn-warning btn-sm m-3" disabled>Your request is pending</button>;
+        else 
+            return <button className="btn btn-danger btn-sm m-3" disabled>Your request has been rejected</button>;
     }
 
     render() {
@@ -353,9 +370,9 @@ class Trip extends React.Component {
                         </div>
                     </div>
                     <div className="col"></div>
-                    { this.props.login !== trip.author &&
+                    { this.shouldDisplayRequestAction() &&
                     <div className="col-auto">
-                        <button className="btn btn-primary btn-sm m-3" data-toggle="modal" data-target="#exampleModal">Sign for the trip</button>
+                        {this.getRequestAction()}
                     </div>}
                 </div>
                 <div className="row">

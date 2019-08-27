@@ -33,6 +33,11 @@
 	width: 150px;
 }
 
+.offer-img img {
+	height: 100%;
+	width: 100%;
+}
+
 .center-vh {
 	position: absolute;
 	margin: 0;

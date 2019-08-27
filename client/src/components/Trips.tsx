@@ -25,14 +25,18 @@ class Trips extends React.Component {
             <div>
                 <div>
                 {
-                    this.state.trips.map((el, index ) => {
+                    this.state.trips.map((trip, index ) => {
                         return <div key={index} className="shadow-sm p-3 mb-2 bg-white row">
-                            <div className="offer-img bg-dark">Image</div>
+                            <div className="offer-img bg-dark">
+                                {trip.images && trip.images[0] &&
+                                    <img src={`data:image/jpg;base64, ${trip.images[0]}`} />
+                                }
+                            </div>
                             <div className="col-5">
                                 <div className="row mt-4">
                                     <div className="col-auto">
-                                        <h3 className="d-inline yoo-text-1">{el.startingPoint}</h3>
-                                        <p className="text-center">{el.startDate}</p>
+                                        <h3 className="d-inline yoo-text-1">{trip.startingPoint}</h3>
+                                        <p className="text-center">{trip.startDate}</p>
                                     </div>
                                     <div className="col text-center">
                                         <svg height="50px" width="100%" xmlns="http://www.w3.org/2000/svg">
@@ -41,20 +45,20 @@ class Trips extends React.Component {
                                         <p>5 days</p>
                                     </div>
                                     <div className="col-auto">
-                                        <h3 className="d-inline yoo-text-1">{el.destinationPoint}</h3>
-                                        <p className="text-center">{el.endDate}</p>
+                                        <h3 className="d-inline yoo-text-1">{trip.destinationPoint}</h3>
+                                        <p className="text-center">{trip.endDate}</p>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-4">
-                                Transport: {el.transport}<br />
-                                Transport: {el.transportType}<br />
-                                Number of people: {el.numberOfPeople}<br />
+                                Transport: {trip.transport}<br />
+                                Transport: {trip.transportType}<br />
+                                Number of people: {trip.numberOfPeople}<br />
                                 Available slots: 3<br />
-                                Accommodation: {el.accommodation}<br />
+                                Accommodation: {trip.accommodation}<br />
                             </div>
                             <div className="col">
-                                <Link to={`/trip/${el._id}`} className="btn btn-primary btn-sm">Check this out!</Link>
+                                <Link to={`/trip/${trip._id}`} className="btn btn-primary btn-sm">Check this out!</Link>
                             </div>
                         </div>
                     })
