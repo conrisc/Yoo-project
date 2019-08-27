@@ -15,7 +15,11 @@ class Profile extends React.Component {
             name: '',
             lastName: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            infoBox: {
+                msg: '',
+                type: 'info'
+            }
         }
 
         ls.isLoggedIn({
@@ -52,10 +56,20 @@ class Profile extends React.Component {
                 lastName: this.state.lastName,
                 password: this.state.password
             }).then(data => {
-                console.log(data.msg);
+                this.setState({
+                    infoBox: {
+                        message: data.msg,
+                        type: data.status === 200 ? 'primary' : 'danger'
+                    }
+                });
             })
         else 
-            console.log('Nope');
+            this.setState({
+                infoBox: {
+                    message: 'Passwords do not match!',
+                    type: 'danger'
+                }
+            });
     }
 
     render() {
@@ -74,9 +88,11 @@ class Profile extends React.Component {
                             <div className="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                                 <form className="px-5 py-4 simple-form m-auto" onSubmit={(e) => this.editProfile(e)}>
                                     <h2 className="text-center">Your profile</h2>
-                                    <div className="alert alert-info" role="alert">
-                                        Some message!
-                                    </div>
+                                    {this.state.infoBox.message && 
+                                        <div className={`alert alert-${this.state.infoBox.type} m-4`} role="alert">
+                                            {this.state.infoBox.message}
+                                        </div>
+                                    }
                                     <div className="form-group">
                                         <label htmlFor="login">Login</label>
                                         <input type="text" name="login" readOnly className="form-control-plaintext" value={this.props.login}/>
