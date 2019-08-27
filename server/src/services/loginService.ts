@@ -88,6 +88,25 @@ function getUserData(req: express.Request, res: express.Response) {
         });
 }
 
+function updateUserData(req: express.Request, res: express.Response) {
+    const { login, password, name, lastName } = req.body;
+    const data = password ? { password, name, lastName } : { name, lastName }
+
+    ms.update('users', { login }, data)
+        .then(() => {
+            res.send({
+                'msg': 'User data has been updated!',
+                'status': 200
+            })
+        })
+        .catch(() => {
+            res.send({
+                'msg': 'User data has failed!',
+                'status': 400
+            })
+        });
+}
+
 function isLoggedIn(req: express.Request, res: express.Response) {
     const { login, token } = req.body;
     ms.find('logged', { login, token })
@@ -132,5 +151,6 @@ export {
     signIn,
     signUp,
     getUserData,
+    updateUserData,
     isLoggedIn
 }

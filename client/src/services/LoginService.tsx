@@ -24,6 +24,10 @@ class LoginService {
         return this.postData('http://localhost:3001/getuserdata', credentials);
     }
 
+    public updateUserData(credentials) {
+        return this.postData('http://localhost:3001/updateuserdata', credentials);
+    }
+
     public isLoggedIn(credentials) {
         return this.postData('http://localhost:3001/isloggedin', credentials);
     }

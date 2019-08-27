@@ -13,7 +13,9 @@ class Profile extends React.Component {
 
         this.state = {
             name: '',
-            lastName: ''
+            lastName: '',
+            password: '',
+            confirmPassword: ''
         }
 
         ls.isLoggedIn({
@@ -35,6 +37,27 @@ class Profile extends React.Component {
         });
     }
 
+    handleInputChange(event) {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    }
+
+    editProfile(event) {
+        event.preventDefault();
+        if (this.state.password === this.state.confirmPassword)
+            ls.updateUserData({
+                login: this.props.login,
+                name: this.state.name,
+                lastName: this.state.lastName,
+                password: this.state.password
+            }).then(data => {
+                console.log(data.msg);
+            })
+        else 
+            console.log('Nope');
+    }
+
     render() {
         return (
             <div>
@@ -49,7 +72,7 @@ class Profile extends React.Component {
                     <div className="col-auto">
                         <div className="tab-content" id="v-pills-tabContent">
                             <div className="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                                <form className="px-5 py-4 simple-form m-auto" onSubmit={() => {}}>
+                                <form className="px-5 py-4 simple-form m-auto" onSubmit={(e) => this.editProfile(e)}>
                                     <h2 className="text-center">Your profile</h2>
                                     <div className="alert alert-info" role="alert">
                                         Some message!
@@ -60,19 +83,19 @@ class Profile extends React.Component {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="password">New Password</label>
-                                        <input type="password" name="password" className="form-control" placeholder="password" onChange={() => {}}/>
+                                        <input type="password" name="password" className="form-control" placeholder="password" onChange={(e) => this.handleInputChange(e)}/>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="password">Confirm Password</label>
-                                        <input type="password" name="password" className="form-control" placeholder="password" onChange={() => {}}/>
+                                        <input type="password" name="confirmPassword" className="form-control" placeholder="password" onChange={(e) => this.handleInputChange(e)}/>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="name">Name</label>
-                                        <input type="text" name="name" className="form-control" value={this.state.name} onChange={() => {}}/>
+                                        <input type="text" name="name" className="form-control" value={this.state.name} onChange={(e) => this.handleInputChange(e)}/>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="lastname">Lastname</label>
-                                        <input type="text" name="lastName" className="form-control" value={this.state.lastName} onChange={() => {}}/>
+                                        <input type="text" name="lastName" className="form-control" value={this.state.lastName} onChange={(e) => this.handleInputChange(e)}/>
                                     </div>
                                     <div className="text-center">
                                         <input type="submit" value="Edit profile" className="btn btn-primary"/>
