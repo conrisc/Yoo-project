@@ -65,6 +65,7 @@ class TripCreator extends React.Component {
                 });
             }
             placeMarker(e.latLng);
+            this.geocodeLatLng(e.latLng, 'startingPoint');
         });
 
         this.map.addListener('rightclick', (e) => {
@@ -76,6 +77,33 @@ class TripCreator extends React.Component {
                 });
             }
             placeMarker(e.latLng);
+            this.geocodeLatLng(e.latLng, 'destinationPoint');
+        });
+    }
+
+    geocodeLatLng(latlng, point) {
+        const geocoder = new google.maps.Geocoder;
+        geocoder.geocode({'location': latlng}, (results, status) => {
+            if (status === 'OK') {
+                if (results[0]) {
+                    console.log(results[0]);
+                    this.setState({ [point]: results[0].formatted_address}, this.updateMapDebounced);
+                } else {
+                    this.props.pushNotification({
+                        title: 'Geocoder',
+                        time: new Date(),
+                        message: 'Unknown location',
+                        type: 'danger'
+                    });
+                }
+            } else {
+                this.props.pushNotification({
+                    title: 'Geocoder',
+                    time: new Date(),
+                    message: status,
+                    type: 'danger'
+                });
+            }
         });
     }
 
