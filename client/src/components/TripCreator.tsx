@@ -296,7 +296,7 @@ class TripCreator extends React.Component {
                         </div>
                     </form>
                 </div>
-                <div className="my-3 text-center footer">
+                <div className="my-3 text-center">
                     <button onClick={() => this.createTrip()} className="btn btn-primary">Create trip</button>
                 </div>
             </div>
