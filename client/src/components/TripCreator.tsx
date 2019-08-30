@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Debounce from 'awesome-debounce-promise';
+import marker1 from '../map-marker_1.png';
+import marker2 from '../map-marker_2.png';
 
 import { TripService } from '../services';
 
@@ -48,10 +50,33 @@ class TripCreator extends React.Component {
     componentDidMount() {
         this.map = new google.maps.Map(this.mapRef.current, {
             center: {lat: 48, lng: 17},
-            zoom: 4
+            zoom: 4,
+            mapTypeControl: false,
+            streetViewControl: false
         });
         this.directionsDisplay = new google.maps.DirectionsRenderer();
 
+        this.map.addListener('click', (e) => {
+            const placeMarker = (latLng) => {
+                var marker = new google.maps.Marker({
+                    position: latLng,
+                    map: this.map,
+                    icon: marker2
+                });
+            }
+            placeMarker(e.latLng);
+        });
+
+        this.map.addListener('rightclick', (e) => {
+            const placeMarker = (latLng) => {
+                var marker = new google.maps.Marker({
+                    position: latLng,
+                    map: this.map,
+                    icon: marker1
+                });
+            }
+            placeMarker(e.latLng);
+        });
     }
 
     handleInputChange(event, callback = () => {}) {
