@@ -14,7 +14,11 @@ class TripService {
     }
 
     public createTrip(data) {
-        return this.postFormData('http://localhost:3001/trip/create', data);
+        return this.postData('http://localhost:3001/trip/create', data);
+    }
+
+    public uploadTripImages(data) {
+        return this.postFormData('http://localhost:3001/trip/images', data);
     }
 
     public requestTrip(data) {
@@ -45,7 +49,7 @@ class TripService {
         .then(response => response.json());
     }
 
-    private postData(url = '', data: any = new FormData()) {
+    private postData(url = '', data: any = {}) {
         return fetch(url, {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, cors, *same-origin

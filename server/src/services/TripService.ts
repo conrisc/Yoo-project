@@ -8,8 +8,21 @@ import { MongoService } from './mongoService.ts';
 let ms = new MongoService();
 
 class TripService {
-    public createTrip(req: express.Request, res: express.Response) {
 
+    public createTrip(req: express.Request, res: express.Response) {
+        const data = req.body;
+        ms.insert('trips', data)
+            .then((response) => {
+                console.log(response);
+                res.send({
+                    'msg': 'Trip has been added!',
+                    'tripId': response.insertedId,
+                    'status': 201
+                });
+            })
+    }
+
+    public updateImages(req: express.Request, res: express.Response) {
         let form = new IncomingForm();
         form.parse(req, (err: any, fields: any, files: any) => {
             const images = Object.values(files).map((img: any) => {
@@ -17,19 +30,19 @@ class TripService {
                 const imgBase64 = fileBuffer.toString('base64');
                 return imgBase64;
             });
+            const tripId = new ObjectId(fields.tripId);
 
             const data = {
-                ...fields,
                 images
             }
-            ms.insert('trips', data)
+
+            ms.update('trips', { _id: tripId }, data)
                 .then(() => {
                     res.send({
-                        'msg': 'Trip has been added!',
-                        'status': 201
-                    });
+                        'msg': 'Images has been added!',
+                        'status': 200
+                    })
                 })
-
         });
     }
 
@@ -102,7 +115,7 @@ class TripService {
                     res.send({
                         'msg': 'Request has been updated!',
                         'status': 200
-                    })
+                    });
                 })
     }
 

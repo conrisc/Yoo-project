@@ -37,7 +37,7 @@ class MyTrips extends React.Component {
                             <div className="col-5">
                                 <div className="row mt-4">
                                     <div className="col-auto">
-                                        <h3 className="d-inline yoo-text-1">{trip.startingPoint}</h3>
+                                        <h3 className="d-inline yoo-text-1">{trip.startingPoint.text}</h3>
                                         <p className="text-center">{trip.startDate}</p>
                                     </div>
                                     <div className="col text-center">
@@ -47,7 +47,7 @@ class MyTrips extends React.Component {
                                         <p>5 days</p>
                                     </div>
                                     <div className="col-auto">
-                                        <h3 className="d-inline yoo-text-1">{trip.destinationPoint}</h3>
+                                        <h3 className="d-inline yoo-text-1">{trip.destinationPoint.text}</h3>
                                         <p className="text-center">{trip.endDate}</p>
                                     </div>
                                 </div>

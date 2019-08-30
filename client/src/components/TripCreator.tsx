@@ -266,8 +266,7 @@ class TripCreator extends React.Component {
     }
 
     createTrip() {
-        const formData = new FormData();
-        const data = {
+        const tripData = {
             startingPoint: this.state.startingPoint,
             destinationPoint: this.state.destinationPoint,
             transport: this.state.transport,
@@ -277,17 +276,25 @@ class TripCreator extends React.Component {
             startDate: this.state.startDate,
             endDate: this.state.endDate,
             description: this.state.tripDescription,
-            author: this.state.author
+            author: this.state.author,
+            images: []
         };
-        for (const key in data) {
-            formData.append(key, data[key]);
-        }
 
-        for (let i = 0; i < this.state.previewImages.length; i++) {
-            formData.append(`image_${i}`, this.state.previewImages[i]);
-        }
+        const ts = new TripService();
 
-        new TripService().createTrip(formData);
+        ts.createTrip(tripData)
+            .then(response => {
+                console.log(response);
+                const formData = new FormData();
+                for (let i = 0; i < this.state.previewImages.length; i++) {
+                    formData.append(`image_${i}`, this.state.previewImages[i]);
+                }
+                if (this.state.previewImages.length > 0)
+                    ts.uploadTripImages(formData)
+                        .then(response => {
+                            console.log(response);
+                        })
+            });
     }
 
     showFiles() {

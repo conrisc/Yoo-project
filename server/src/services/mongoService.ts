@@ -37,7 +37,7 @@ class MongoService {
             .then(db => {
                 // @ts-ignore
                 const collection = db.collection(collectionName);
-                collection.insertOne(data);
+                return collection.insertOne(data);
             })
     }
 

@@ -11,6 +11,7 @@ function injectAPI(app: express.Application) {
     app.post('/getuserdata', services.getUserData);
     app.post('/updateuserdata', services.updateUserData);
     app.post('/trip/create', ts.createTrip);
+    app.post('/trip/images', ts.updateImages);
     app.get('/trip/:tripId', ts.getTrip);
     app.post('/trip/request/ask', ts.requestTrip);
     app.post('/trip/request/update', ts.updateRequestTrip);

@@ -58,23 +58,17 @@ class Trip extends React.Component {
 
     updateMap() {
         this.directionsDisplay = new google.maps.DirectionsRenderer();
-        if (this.state.trip.startingPoint && this.state.trip.destinationPoint) {
+        if (this.state.trip.startingPoint.text && this.state.trip.destinationPoint.text) {
             this.updateGroundRoute();
             this.updateFlightRoute();
-        } else if (this.state.startingPoint) {
-
-        } else if (this.state.destinationPoint) {
-
-        } else {
-
-        }
+        } 
     }
 
     updateGroundRoute() {
         const directionService = new google.maps.DirectionsService();
         directionService.route({
-            origin: this.state.trip.startingPoint,
-            destination: this.state.trip.destinationPoint,
+            origin: this.state.trip.startingPoint.location,
+            destination: this.state.trip.destinationPoint.location,
             travelMode: 'DRIVING'
             }, (response, status) => {
                 if (status === 'OK') {
@@ -97,7 +91,7 @@ class Trip extends React.Component {
 
         const second = (res) => {
             geocoder.geocode({
-                'address': this.state.trip.destinationPoint
+                'address': this.state.trip.destinationPoint.location
             }, (results, status) => {
                 if (status === 'OK') {
                     var flightPlanCoordinates = [
@@ -124,7 +118,7 @@ class Trip extends React.Component {
             });
         };
         geocoder.geocode({
-            'address': this.state.trip.startingPoint
+            'address': this.state.trip.startingPoint.location
         }, (results, status) => {
             if (this.flightPath) this.flightPath.setMap(null);
             if (status === 'OK') {
@@ -354,7 +348,7 @@ class Trip extends React.Component {
                     <div className="col-5">
                         <div className="row mt-4">
                             <div className="col-auto">
-                                <h3 className="d-inline yoo-text-1">{trip.startingPoint}</h3>
+                                {trip.startingPoint && <h3 className="d-inline yoo-text-1">{trip.startingPoint.text}</h3> }
                                 <p className="text-center">{trip.startDate}</p>
                             </div>
                             <div className="col text-center">
@@ -364,7 +358,7 @@ class Trip extends React.Component {
                                 <p>5 days</p>
                             </div>
                             <div className="col-auto">
-                                <h3 className="d-inline yoo-text-1">{trip.destinationPoint}</h3>
+                                {trip.destinationPoint && <h3 className="d-inline yoo-text-1">{trip.destinationPoint.text}</h3>}
                                 <p className="text-center">{trip.endDate}</p>
                             </div>
                         </div>
@@ -474,10 +468,12 @@ class Trip extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { login: state.login };
+    return { login: state.login };
 };
-const mapDispatchToProps = () => {
-  return {}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        pushNotification: (notification) => dispatch({ type: 'PUSH_NOTIFICATION', notification })
+    }
 };
 
 // @ts-ignore
