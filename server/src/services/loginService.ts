@@ -78,6 +78,7 @@ function getUserData(req: express.Request, res: express.Response) {
                     'login': login,
                     'name': items[0].name,
                     'lastName': items[0].lastName,
+                    'description': items[0].description,
                     'status': 200
                 });
             else 

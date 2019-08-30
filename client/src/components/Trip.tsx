@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from "react-router-dom";
 
 import { TripService } from '../services';
 const ts = new TripService();
@@ -234,7 +235,11 @@ class Trip extends React.Component {
                 {this.state.conversation.length > 0 ?
                     this.state.conversation.map((data, index) => {
                         const formatedTime = this.getFormatedDate(new Date(data.date));
-                        return <span className="d-block" key={index}>{formatedTime} <span className="font-weight-bold">{data.username}</span>: {data.message}</span>
+                        return <span className="d-block" key={index}>
+                            <span>{formatedTime}&nbsp;</span>
+                            <Link to={`/profile/${data.username}`} className="font-weight-bold text-decoration-none">{data.username}</Link>
+                            <span>: {data.message}</span>
+                        </span>
                     })
                     :
                     <span className="text-primary">This chat is empty</span>

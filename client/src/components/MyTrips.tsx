@@ -24,7 +24,7 @@ class MyTrips extends React.Component {
     render() {
         return (
             <div>
-                <Link to='/create-trip' className="btn btn-primary btn-sm">Create a trip</Link>
+                <Link to='/create-trip' className="btn btn-primary btn-sm my-3">Create a trip</Link>
                 <div>
                 {
                     this.state.trips.map((trip, index ) => {
