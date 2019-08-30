@@ -22,6 +22,9 @@ class TripCreator extends React.Component {
 
     updateMapDebounced;
 
+    startMarker;
+    destinationMarker;
+
     constructor(readonly props) {
         super(props);
 
@@ -45,6 +48,7 @@ class TripCreator extends React.Component {
             previewImages: [],
             participants: []
         }
+
     }
 
     componentDidMount() {
@@ -55,14 +59,17 @@ class TripCreator extends React.Component {
             streetViewControl: false
         });
         this.directionsDisplay = new google.maps.DirectionsRenderer();
+        this.startMarker = new google.maps.Marker({
+            icon: marker2
+        });
+        this.destinationMarker = new google.maps.Marker({
+            icon: marker1
+        });
 
         this.map.addListener('click', (e) => {
             const placeMarker = (latLng) => {
-                var marker = new google.maps.Marker({
-                    position: latLng,
-                    map: this.map,
-                    icon: marker2
-                });
+                this.startMarker.setPosition(latLng);
+                this.startMarker.setMap(this.map);
             }
             placeMarker(e.latLng);
             this.geocodeLatLng(e.latLng, 'startingPoint');
@@ -70,11 +77,8 @@ class TripCreator extends React.Component {
 
         this.map.addListener('rightclick', (e) => {
             const placeMarker = (latLng) => {
-                var marker = new google.maps.Marker({
-                    position: latLng,
-                    map: this.map,
-                    icon: marker1
-                });
+                this.destinationMarker.setPosition(latLng);
+                this.destinationMarker.setMap(this.map);
             }
             placeMarker(e.latLng);
             this.geocodeLatLng(e.latLng, 'destinationPoint');
