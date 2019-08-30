@@ -2,6 +2,8 @@ class TripService {
     constructor() {}
 
     public getTrips({ skip, limit }) {
+        skip = skip >= 0 ? skip : 0;
+        limit = limit >=0 ? limit : 0;
         return this.getData(`http://localhost:3001/trips/${skip}/${limit}`);
     }
 

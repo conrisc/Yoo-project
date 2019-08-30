@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { TripService } from '../services';
+import { Pagination } from './Pagination';
 
 const ts = new TripService();
 
@@ -11,16 +12,13 @@ class Trips extends React.Component {
     constructor(readonly props) {
         super(props);
 
-        const currentPage = Number(this.props.match.params.pageNumber);
-
         this.state = {
             trips: [],
             tripsCount: 0,
             tripsPerPage: 2,
-            currentPage: currentPage >= 0 ? currentPage : 1
+            currentPage: Number(this.props.match.params.pageNumber) || 1
         }
         const skip = (this.state.currentPage - 1) * this.state.tripsPerPage;
-        console.log(skip, this.state.tripsPerPage);
         ts.getTrips({ skip, limit: this.state.tripsPerPage })
             .then(data => {
                 this.setState({ trips: data.trips, tripsCount: data.tripsCount });
@@ -32,10 +30,8 @@ class Trips extends React.Component {
         const newPage = Number(this.props.match.params.pageNumber) || 1;
         if (this.state.currentPage !== newPage) {
             const skip = (newPage - 1) * this.state.tripsPerPage;
-            console.log('lol');
             ts.getTrips({ skip, limit: this.state.tripsPerPage })
                 .then(data => {
-                    console.log(data);
                     this.setState({ trips: data.trips, tripsCount: data.tripsCount, currentPage: newPage});
                 })
         }
@@ -87,29 +83,7 @@ class Trips extends React.Component {
                     })
                 }
                 </div>
-                <nav aria-label="Page navigation example">
-                    <ul className="pagination">
-                        { currentPage > 1 && 
-                            <li className="page-item">
-                                <Link to={`/trips/${currentPage - 1}`} className="page-link">Previous</Link>
-                            </li>
-                        }
-                        {
-                            Array(pages).map((el, index) => {
-                                const page = index + 1;
-                                return <li className="page-item">
-                                    <Link to={`/trips/${page}`} className="page-link">{page}</Link>
-                                </li>
-                            })
-                        }
-                        { currentPage < pages && 
-                            <li className="page-item">
-                                <Link to={`/trips/${currentPage + 1}`} className="page-link">Next</Link>
-                            </li> 
-                        }
-
-                    </ul>
-                </nav>
+                <Pagination currentPage={currentPage} pages={pages} link="/trips" />
             </div>
         );
     }
