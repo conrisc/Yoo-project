@@ -42,12 +42,21 @@ class MongoService {
     }
 
     // @ts-ignore
-    public find(collectionName: string, data) {
+    public find(collectionName: string, data, skip = 0, limit = 0) {
         return this.getDb()
             .then(db => {
                 // @ts-ignore
                 const collection = db.collection(collectionName);
-                return collection.find(data).toArray();
+                return collection.find(data).skip(skip).limit(limit).toArray();
+            })
+    }
+
+    public count(collectionName: string, data: any) {
+        return this.getDb()
+            .then(db => {
+                // @ts-ignore
+                const collection = db.collection(collectionName);
+                return collection.find(data).count();
             })
     }
 

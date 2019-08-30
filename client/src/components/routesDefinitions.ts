@@ -12,6 +12,7 @@ const routesDefinitions = [
     { path: '/', component: Home },
     { path: '/login', component: Login },
     { path: '/trips', component: Trips },
+    { path: '/trips/:pageNumber', component: Trips },
     { path: '/trip/:tripId', component: Trip },
     { path: '/create-trip', component: TripCreator },
     { path: '/my-trips', component: MyTrips },

@@ -1,8 +1,8 @@
 class TripService {
     constructor() {}
 
-    public getTrips() {
-        return this.getData('http://localhost:3001/trips');
+    public getTrips({ skip, limit }) {
+        return this.getData(`http://localhost:3001/trips/${skip}/${limit}`);
     }
 
     public getUserTrips(author) {

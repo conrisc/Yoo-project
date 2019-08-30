@@ -47,10 +47,16 @@ class TripService {
     }
 
     public getTrips(req: express.Request, res: express.Response) {
-        ms.find('trips', {})
-            .then((trips: []) => {
+        const skip = Number(req.params.skip || 0);
+        const limit = Number(req.params.limit || 0);
+        Promise.all([
+            ms.find('trips', {}, skip, limit),
+            ms.count('trips', {})
+        ])
+        .then(([trips, count]) => {
                 res.send({
-                    'trips': trips
+                    'trips': trips,
+                    'tripsCount': count
                 })
             })
     }
