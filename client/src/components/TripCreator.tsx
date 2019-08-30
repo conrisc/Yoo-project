@@ -20,7 +20,8 @@ class TripCreator extends React.Component {
     directionsDisplay;
     flightPath;
 
-    updateMapDebounced;
+    handleStartPointChangeDebounced
+    handleDestinationPointChangeDebounced
 
     startMarker;
     destinationMarker;
@@ -28,14 +29,15 @@ class TripCreator extends React.Component {
     constructor(readonly props) {
         super(props);
 
-        this.updateMapDebounced = Debounce(() => this.updateMap(), 800);
+        this.handleStartPointChangeDebounced = Debounce((name, value) => this.handlePointChange(name, value), 800);
+        this.handleDestinationPointChangeDebounced = Debounce((name, value) => this.handlePointChange(name, value), 800);
 
         this.mapRef = React.createRef();
         this.uploadImagesInputRef = React.createRef();
 
         this.state = {
-            startingPoint: '',
-            destinationPoint: '',
+            startingPoint: { text: '', location: {} },
+            destinationPoint: { text: '', location: {} },
             transport: 'own',
             transportType: 'car',
             numberOfPeople: 1,
@@ -46,7 +48,9 @@ class TripCreator extends React.Component {
             transportTypeClass: 'yoo-hide',
             author: this.props.login,
             previewImages: [],
-            participants: []
+            participants: [],
+            distance: { text: '', value: 0 },
+            duration: { text: '', value: 0 }
         }
 
     }
@@ -91,7 +95,7 @@ class TripCreator extends React.Component {
             if (status === 'OK') {
                 if (results[0]) {
                     console.log(results[0]);
-                    this.setState({ [point]: results[0].formatted_address}, this.updateMapDebounced);
+                    this.setState({ [point]: { text: results[0].formatted_address.split(',')[0], location: latlng } }, () => this.updateMap());
                 } else {
                     this.props.pushNotification({
                         title: 'Geocoder',
@@ -117,33 +121,84 @@ class TripCreator extends React.Component {
         }, callback);
     }
 
-    handleDirectionChange(event) {
-        this.handleInputChange(event, this.updateMapDebounced);
+    handleStartPointChange(event) {
+        const { name, value } = event.target;
+        this.setState({ startingPoint: { text: value, location: this.state.startingPoint.location } })
+        this.handleStartPointChangeDebounced(name, value);
+    }
+
+    handleDestinationPointChange(event) {
+        const { name, value } = event.target;
+        this.setState({ destinationPoint: { text: value, location: this.state.destinationPoint.location } })
+        this.handleDestinationPointChangeDebounced(name, value);
+    }
+
+    handlePointChange(name, value) {
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({
+            'address': value
+        }, (results, status) => {
+            // if (this.flightPath) this.flightPath.setMap(null);
+            if (status === 'OK') {
+                const latLng = results[0].geometry.location;
+                if (name === 'startingPoint') {
+                    this.setState({ startingPoint: { text: value, location: latLng} });
+                    this.startMarker.setPosition(latLng);
+                    this.startMarker.setMap(this.map);
+                }
+                if (name === 'destinationPoint') {
+                    this.setState({ destinationPoint: { text: value, location: latLng } });
+                    this.destinationMarker.setPosition(latLng);
+                    this.destinationMarker.setMap(this.map);
+                }
+                this.updateMap();
+            } else {
+                this.props.pushNotification({
+                    title: 'Location',
+                    time: new Date(),
+                    message: `Couldn\'t find ${name} location`,
+                    type: 'danger'
+                });
+            }
+        });
     }
 
     updateMap() {
-        if (this.state.startingPoint && this.state.destinationPoint) {
+        if (this.state.startingPoint.text && this.state.destinationPoint.text) {
             this.updateGroundRoute();
-            this.updateFlightRoute();
-        } else if (this.state.startingPoint) {
-
-        } else if (this.state.destinationPoint) {
-
-        } else {
-
-        }
+        } 
     }
 
     updateGroundRoute() {
         const directionService = new google.maps.DirectionsService();
+        const distanceService = new google.maps.DistanceMatrixService();
         directionService.route({
-            origin: this.state.startingPoint,
-            destination: this.state.destinationPoint,
+            origin: this.state.startingPoint.location,
+            destination: this.state.destinationPoint.location,
             travelMode: 'DRIVING'
             }, (response, status) => {
                 if (status === 'OK') {
                     this.directionsDisplay.setDirections(response);
                     this.directionsDisplay.setMap(this.map);
+                    distanceService.getDistanceMatrix( {
+                        origins: [ this.state.startingPoint.location ],
+                        destinations: [ this.state.destinationPoint.location ],
+                        travelMode: 'DRIVING',
+                    }, (response, status) => {
+                        if (status === 'OK') {
+                            this.setState({
+                                distance: response.rows[0].elements[0].distance,
+                                duration: response.rows[0].elements[0].duration
+                            });
+                        }
+                        else
+                            this.props.pushNotification({
+                                title: 'Distance',
+                                time: new Date(),
+                                message: status,
+                                type: 'danger'
+                            });
+                    });
                 } else {
                     this.directionsDisplay.setMap(null);
                     this.props.pushNotification({
@@ -156,53 +211,53 @@ class TripCreator extends React.Component {
         });
     }
 
-    updateFlightRoute() {
-        const geocoder = new google.maps.Geocoder();
+    // updateFlightRoute() {
+    //     const geocoder = new google.maps.Geocoder();
 
-        const second = (res) => {
-            geocoder.geocode({
-                'address': this.state.destinationPoint
-            }, (results, status) => {
-                if (status === 'OK') {
-                    var flightPlanCoordinates = [
-                        res[0].geometry.location,
-                        results[0].geometry.location
-                    ];
-                    this.flightPath = new google.maps.Polyline({
-                        path: flightPlanCoordinates,
-                        geodesic: true,
-                        strokeColor: '#FF0000',
-                        strokeOpacity: 1.0,
-                        strokeWeight: 2
-                    });
+    //     const second = (res) => {
+    //         geocoder.geocode({
+    //             'address': this.state.destinationPoint
+    //         }, (results, status) => {
+    //             if (status === 'OK') {
+    //                 var flightPlanCoordinates = [
+    //                     res[0].geometry.location,
+    //                     results[0].geometry.location
+    //                 ];
+    //                 this.flightPath = new google.maps.Polyline({
+    //                     path: flightPlanCoordinates,
+    //                     geodesic: true,
+    //                     strokeColor: '#FF0000',
+    //                     strokeOpacity: 1.0,
+    //                     strokeWeight: 2
+    //                 });
 
-                    this.flightPath.setMap(this.map);
-                } else {
-                    this.props.pushNotification({
-                        title: 'Location',
-                        time: new Date(),
-                        message: 'Couldn\'t find second location',
-                        type: 'danger'
-                    });
-                }
-            });
-        };
-        geocoder.geocode({
-            'address': this.state.startingPoint
-        }, (results, status) => {
-            if (this.flightPath) this.flightPath.setMap(null);
-            if (status === 'OK') {
-                second(results);
-            } else {
-                this.props.pushNotification({
-                    title: 'Location',
-                    time: new Date(),
-                    message: 'Couldn\'t find first location',
-                    type: 'danger'
-                });
-            }
-        });
-    }
+    //                 this.flightPath.setMap(this.map);
+    //             } else {
+    //                 this.props.pushNotification({
+    //                     title: 'Location',
+    //                     time: new Date(),
+    //                     message: 'Couldn\'t find second location',
+    //                     type: 'danger'
+    //                 });
+    //             }
+    //         });
+    //     };
+    //     geocoder.geocode({
+    //         'address': this.state.startingPoint
+    //     }, (results, status) => {
+    //         if (this.flightPath) this.flightPath.setMap(null);
+    //         if (status === 'OK') {
+    //             second(results);
+    //         } else {
+    //             this.props.pushNotification({
+    //                 title: 'Location',
+    //                 time: new Date(),
+    //                 message: 'Couldn\'t find first location',
+    //                 type: 'danger'
+    //             });
+    //         }
+    //     });
+    // }
 
     handleTransportTypeChange(event) {
         this.setState({
@@ -282,13 +337,15 @@ class TripCreator extends React.Component {
                     <form className="col simple-form">
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm" htmlFor="inputStart">Starting point</label>
-                            <input className="form-control form-control-sm" id="inputStart" 
-                            type="text" placeholder="What's your starting point?" name="startingPoint" onChange={e => this.handleDirectionChange(e)}/>
+                            <input className="form-control form-control-sm" id="inputStart" value={this.state.startingPoint.text}
+                            type="text" placeholder="What's your starting point?" name="startingPoint"
+                            onChange={e => this.handleStartPointChange(e)}/>
                         </div>
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm" htmlFor="inputDestination">Destination</label>
-                            <input className="form-control form-control-sm" id="inputDestination" type="text" placeholder="Where would you like to go?"
-                            name="destinationPoint" onChange={e => this.handleDirectionChange(e)} />
+                            <input className="form-control form-control-sm" id="inputDestination" value={this.state.destinationPoint.text}
+                            type="text" placeholder="Where would you like to go?"
+                            name="destinationPoint" onChange={e => this.handleDestinationPointChange(e)} />
                         </div>
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm">Transport</label><br />
@@ -342,6 +399,8 @@ class TripCreator extends React.Component {
                                     type="file" className="input-file" onChange={e => this.uploadFiles(e)} multiple accept="image/*" />
                             </div>
                         </div>
+                        <div className="row">Distance: {this.state.distance.text}</div>
+                        <div className="row">Predicted travel time: {this.state.duration.text}</div>
                     </form>
                 </div>
                 <div className="row mt-2 container">
