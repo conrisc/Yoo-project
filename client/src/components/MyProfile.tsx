@@ -17,6 +17,7 @@ class MyProfile extends React.Component {
             lastName: '',
             password: '',
             confirmPassword: '',
+            description: '',
             infoBox: {
                 msg: '',
                 type: 'info'
@@ -36,7 +37,8 @@ class MyProfile extends React.Component {
                         this.setState({ 
                             name: data.name,
                             lastName: data.lastName,
-                            avatar: data.avatar
+                            avatar: data.avatar,
+                            description: data.description
                         });
                     }
                 });
@@ -122,6 +124,11 @@ class MyProfile extends React.Component {
                                         <div className="form-group">
                                             <label htmlFor="lastname">Lastname</label>
                                             <input type="text" name="lastName" className="form-control" value={this.state.lastName} onChange={(e) => this.handleInputChange(e)}/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="description">Description</label>
+                                            <textarea name="description" className="form-control" value={this.state.description}
+                                            onChange={(e) => this.handleInputChange(e)}/>
                                         </div>
                                         <div className="text-center">
                                             <input type="submit" value="Edit profile" className="btn btn-primary"/>

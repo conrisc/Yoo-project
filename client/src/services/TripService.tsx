@@ -16,6 +16,10 @@ class TripService {
         return this.postData('http://localhost:3001/trip/create', data);
     }
 
+    public deleteTrip(data) {
+        return this.deleteData(`http://localhost:3001/trip/${data.tripId}`);
+    }
+
     public uploadTripImages(data) {
         return this.postFormData('http://localhost:3001/trip/images', data);
     }
@@ -65,6 +69,7 @@ class TripService {
         .then(response => response.json()); // parses JSON response into native JavaScript objects
     }
 
+
     private postFormData(url = '', data: any = new FormData()) {
         return fetch(url, {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -80,6 +85,14 @@ class TripService {
             body: data, // body data type must match "Content-Type" header
         })
         .then(response => response.json()); // parses JSON response into native JavaScript objects
+    }
+
+    private deleteData(url = '') {
+        return fetch(url, {
+            method: 'DELETE',
+            mode: 'cors',
+        })
+        .then(response => response.json());
     }
 
 }

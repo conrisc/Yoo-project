@@ -13,6 +13,7 @@ function injectAPI(app: express.Application) {
     app.post('/trip/create', ts.createTrip);
     app.post('/trip/images', ts.updateImages);
     app.get('/trip/:tripId', ts.getTrip);
+    app.delete('/trip/:tripId', ts.deleteTrip);
     app.post('/trip/request/ask', ts.requestTrip);
     app.post('/trip/request/update', ts.updateRequestTrip);
     app.post('/trip/request/remove', ts.removeRequestTrip);

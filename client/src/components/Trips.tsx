@@ -20,25 +20,29 @@ class Trips extends React.Component {
             currentPage: Number(this.props.match.params.pageNumber) || 1,
             author: this.props.match.params.author || ''
         }
-        const skip = (this.state.currentPage - 1) * this.state.tripsPerPage;
-        ts.getTrips({ skip, limit: this.state.tripsPerPage, author: this.state.author })
-            .then(data => {
-                this.setState({ trips: data.trips, tripsCount: data.tripsCount });
-            })
+        this.updateTrips(this.state.currentPage, this.state.author);
     }
 
     componentDidUpdate() {
         const newPage = Number(this.props.match.params.pageNumber) || 1;
         const author = this.props.match.params.author || '';
-        if (this.state.currentPage !== newPage ||
-            this.state.author != author
-           ) {
-            const skip = (newPage - 1) * this.state.tripsPerPage;
-            ts.getTrips({ skip, limit: this.state.tripsPerPage, author })
-                .then(data => {
-                    this.setState({ trips: data.trips, tripsCount: data.tripsCount, currentPage: newPage, author});
-                })
-        }
+        if (this.state.currentPage !== newPage || this.state.author != author)
+            this.updateTrips(newPage, author);
+    }
+
+    updateTrips(page, author) {
+        const skip = (page - 1) * this.state.tripsPerPage;
+        ts.getTrips({ skip, limit: this.state.tripsPerPage, author })
+            .then(data => {
+                this.setState({ trips: data.trips, tripsCount: data.tripsCount, currentPage: page, author});
+            })
+    }
+
+    removeTrip(tripId) {
+        ts.deleteTrip({ tripId })
+            .then(response => {
+                this.updateTrips(this.state.currentPage, this.state.author);
+            });
     }
 
     render() {
@@ -49,9 +53,8 @@ class Trips extends React.Component {
                 <div>
                 {
                     this.state.trips.map((trip, index ) => {
-                        console.log(trip)
                         const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
-                        const tripDuration = (new Date(trip.endDate.value).getTime() - new Date(trip.startDate.value).getTime()) / (1000 * 60 * 60 * 24);
+                        const tripDuration = (new Date(trip.endDate).getTime() - new Date(trip.startDate).getTime()) / (1000 * 60 * 60 * 24);
                         return <div key={index} className="shadow-sm p-3 mb-2 bg-white row">
                             <div className="offer-img bg-dark">
                                 {trip.images && trip.images[0] &&
@@ -84,7 +87,10 @@ class Trips extends React.Component {
                                 Accommodation: {trip.accommodation}<br />
                             </div>
                             <div className="col">
-                                <Link to={`/trip/${trip._id}`} className="btn btn-primary btn-sm">Check</Link>
+                                <Link to={`/trip/${trip._id}`} className="btn btn-primary btn-sm mx-1">Check</Link>
+                                {this.props.login === trip.author &&
+                                    <button className="btn btn-danger btn-sm mx-1" onClick={() => this.removeTrip(trip._id)}>Remove</button>
+                                }
                             </div>
                         </div>
                     })

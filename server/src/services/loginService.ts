@@ -90,8 +90,8 @@ function getUserData(req: express.Request, res: express.Response) {
 }
 
 function updateUserData(req: express.Request, res: express.Response) {
-    const { login, password, name, lastName } = req.body;
-    const data = password ? { password, name, lastName } : { name, lastName }
+    const { login, password, name, lastName, description } = req.body;
+    const data = password ? { password, name, lastName, description } : { name, lastName, description }
 
     ms.update('users', { login }, data)
         .then(() => {

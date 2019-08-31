@@ -45,7 +45,8 @@ class Trip extends React.Component {
 
         ts.getTrip(this.props.match.params.tripId)
             .then(data => {
-                this.setState({ trip: data.trip[0] }, () => this.updateMap());
+                if (data.status === 200)
+                    this.setState({ trip: data.trip }, () => this.updateMap());
             });
         ts.getRequests({ tripId: this.props.match.params.tripId })
             .then(data => {
@@ -293,9 +294,19 @@ class Trip extends React.Component {
     }
 
     render() {
+            return this.renderTrip();
+    }
+
+    renderError() {
+        return <div>
+            <h4>Trip not found</h4>
+        </div>
+    }
+
+    renderTrip() {
         const trip = this.state.trip;
         const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
-        const tripDuration = (new Date(trip.endDate.value).getTime() - new Date(trip.startDate.value).getTime()) / (1000 * 60 * 60 * 24);
+        const tripDuration = (new Date(trip.endDate).getTime() - new Date(trip.startDate).getTime()) / (1000 * 60 * 60 * 24);
         return (
             <div>
                 <div className="modal fade" id="exampleModal"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -333,7 +344,7 @@ class Trip extends React.Component {
                         <div className="row mt-4">
                             <div className="col-auto">
                                 {trip.startingPoint && <h3 className="d-inline yoo-text-1">{trip.startingPoint.value}</h3> }
-                                <p className="text-center">{trip.startDate.value}</p>
+                                <p className="text-center">{trip.startDate}</p>
                             </div>
                             <div className="col text-center">
                                 <svg height="50px" width="100%" xmlns="http://www.w3.org/2000/svg">
@@ -343,7 +354,7 @@ class Trip extends React.Component {
                             </div>
                             <div className="col-auto">
                                 {trip.destinationPoint && <h3 className="d-inline yoo-text-1">{trip.destinationPoint.value}</h3>}
-                                <p className="text-center">{trip.endDate.value}</p>
+                                <p className="text-center">{trip.endDate}</p>
                             </div>
                         </div>
                     </div>
@@ -401,7 +412,7 @@ class Trip extends React.Component {
                                 Number of people: {trip.numberOfPeople}<br />
                                 <span className={availableSpots === 0 ? 'text-danger': ''}>Available spots: {availableSpots}</span><br />
                                 Accommodation: {trip.accommodation}<br />
-                                Host: <Link to={`/profile/${trip.author}`} className="text-decoration-none">{trip.author}</Link><br />
+                                Author: <Link to={`/profile/${trip.author}`} className="text-decoration-none">{trip.author}</Link><br />
                             </div>
                             <div className="tab-pane fade" id="chat"
                                 role="tabpanel" aria-labelledby="chat-tab">

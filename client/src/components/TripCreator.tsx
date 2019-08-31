@@ -304,20 +304,25 @@ class TripCreator extends React.Component {
             author: this.state.author,
             images: []
         };
-        console.log(tripData);
 
         const ts = new TripService();
 
         ts.createTrip(tripData)
             .then(response => {
-                const formData = new FormData();
-                for (let i = 0; i < this.state.previewImages.length; i++) {
-                    formData.append(`image_${i}`, this.state.previewImages[i]);
+                if (response.status === 201) {
+                    if (this.state.previewImages.length > 0) {
+                        const formData = new FormData();
+                        formData.append('tripId', response.tripId)
+                        for (let i = 0; i < this.state.previewImages.length; i++) {
+                            formData.append(`image_${i}`, this.state.previewImages[i]);
+                        }
+                        ts.uploadTripImages(formData)
+                            .then(() => {
+                                this.props.history.push(`/trip/${response.tripId}`)
+                            })
+                    } else
+                        this.props.history.push(`/trip/${response.tripId}`)
                 }
-                if (this.state.previewImages.length > 0)
-                    ts.uploadTripImages(formData)
-                        .then(response => {
-                        })
             });
     }
 
@@ -412,7 +417,7 @@ class TripCreator extends React.Component {
                             <label className="col-form-label col-form-label-sm">Transport</label><br />
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="transport" id="ownTransport" value="own"
-                                onChange={e=> { this.handleTransportTypeChange(e); this.handleInputChange(e) }}/>
+                                checked onChange={e=> { this.handleTransportTypeChange(e); this.handleInputChange(e) }}/>
                                 <label className="form-check-label col-form-label-sm" htmlFor="ownTransport">Everyone on its own</label>
                             </div>
                             <div className="form-check form-check-inline">

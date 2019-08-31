@@ -11,7 +11,6 @@ class TripService {
 
     public createTrip(req: express.Request, res: express.Response) {
         const data = req.body;
-        console.log(data);
         ms.insert('trips', data)
             .then((response) => {
                 res.send({
@@ -46,6 +45,17 @@ class TripService {
         });
     }
 
+    public deleteTrip(req: express.Request, res: express.Response) {
+        const tripId = new ObjectId(req.params.tripId);
+        ms.deleteOne('trips', { _id: tripId })
+            .then(response => {
+                res.send({
+                    'msg': 'Trip has been deleted!',
+                    'status': 200
+                });
+            })
+    }
+
     public getTrips(req: express.Request, res: express.Response) {
         const skip = Number(req.params.skip || 0);
         const limit = Number(req.params.limit || 0);
@@ -63,12 +73,19 @@ class TripService {
     }
 
     public getTrip(req: express.Request, res: express.Response) {
-        const idFiled = new ObjectId(req.params.tripId);
-        ms.find('trips', { _id: idFiled })
-            .then(trip => {
-                res.send({
-                    'trip': trip
-                });
+        const tripId = new ObjectId(req.params.tripId);
+        ms.find('trips', { _id: tripId })
+            .then(trips => {
+                if (trips.length > 0)
+                    res.send({
+                        'trip': trips[0],
+                        'status': 200
+                    });
+                else 
+                    res.send({
+                        'trip': {},
+                        'status': 400
+                    });
             });
     }
 
