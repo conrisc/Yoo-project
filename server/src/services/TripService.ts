@@ -110,11 +110,16 @@ class TripService {
         const id = new ObjectId(requestId);
         if (status === 'approved')
             ms.find('tripRequests', { _id: id })
-                .then(requests => {
-                    const { login, tripId } = requests[0];
+                .then(tripRequests => {
+                    const { login, tripId } = tripRequests[0];
                     const id2 = new ObjectId(tripId);
-                    ms.deleteOne('tripRequests', { _id: id });
-                    ms.push('trips', { _id: id2 }, { participants: login })
+                    ms.find('trips', { _id: id2 })
+                        .then(trips => {
+                            if (!trips[0].participants || trips[0].participants.length < trips[0].numberOfPeople) {
+                                ms.deleteOne('tripRequests', { _id: id });
+                                ms.push('trips', { _id: id2 }, { participants: login })
+                            }
+                        })
                 })
         else
             ms.update('tripRequests', { _id: id }, { status })
