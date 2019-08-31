@@ -479,8 +479,14 @@ class TripCreator extends React.Component {
                         <div className="row">Predicted travel time: {this.state.duration.text}</div>
                     </form>
                 </div>
-                <div className="row mt-2 container">
-                    <form className="col simple-form">
+                <div className="row">
+                    <form className="col-9">
+                        <div className="mb-2 text-right">
+                            <span className="font-weight-light">
+                                <span className="font-weight-bold">Left Mouse Click</span> - mark starting point |
+                                <span className="font-weight-bold"> Right Mouse Click</span> - mark destination point
+                            </span>
+                        </div>
                         <div className="form-group">
                             <textarea className={'form-control form-control-sm' + (this.state.tripDescription.isValid ? '' : ' is-invalid')}
                             placeholder="Description of your trip" name="tripDescription" onChange={e => this.handleValueChange(e)}>
@@ -490,9 +496,9 @@ class TripCreator extends React.Component {
                             </div>
                         </div>
                     </form>
-                </div>
-                <div className="my-3 text-center">
-                    <button onClick={() => this.createTrip()} className="btn btn-primary">Create trip</button>
+                    <div className="col text-center">
+                        <button onClick={() => this.createTrip()} className="btn btn-sm btn-primary mt-4">Create trip</button>
+                    </div>
                 </div>
             </div>
         );
