@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
+
 import { DefaultMenu } from './DefaultMenu';
 import { UserMenu } from './UserMenu';
 
@@ -14,7 +16,10 @@ class Menu extends React.Component {
         return (
             <div className="col text-right">
                 {this.props.login === '' ?
-                    <DefaultMenu /> :
+                    <div>
+                        <DefaultMenu />
+                        <Redirect to="/login" />
+                    </div> :
                     <UserMenu />}
             </div>
         );

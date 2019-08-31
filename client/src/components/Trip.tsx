@@ -285,7 +285,7 @@ class Trip extends React.Component {
         else if (availableSpots === 0)
             return <button className="btn btn-danger btn-sm m-3" disabled>There are no available spots</button>;
         else if (!myRequest)
-            return <button className="btn btn-primary btn-sm m-3" data-toggle="modal" data-target="#exampleModal">Sign for the trip</button>;
+            return <button className="btn btn-primary btn-sm m-3" data-toggle="modal" data-target="#exampleModal">Sign up for the trip</button>;
         else if (myRequest.status === 'pending')
             return <button className="btn btn-warning btn-sm m-3" disabled>Your request is pending</button>;
         else 
@@ -301,7 +301,7 @@ class Trip extends React.Component {
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Sign for the trip</h5>
+                            <h5 className="modal-title" id="exampleModalLabel">Sign up for the trip</h5>
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
@@ -321,7 +321,7 @@ class Trip extends React.Component {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
-                            <button type="button" className="btn btn-primary btn-sm" onClick={() => this.signForTrip()}>Sign up</button>
+                            <button type="button" className="btn btn-primary btn-sm" onClick={() => this.signForTrip()} data-dismiss="modal">Sign up</button>
                         </div>
                         </div>
                     </div>
@@ -400,7 +400,7 @@ class Trip extends React.Component {
                                 Number of people: {trip.numberOfPeople}<br />
                                 <span className={availableSpots === 0 ? 'text-danger': ''}>Available spots: {availableSpots}</span><br />
                                 Accommodation: {trip.accommodation}<br />
-                                Host: {trip.author}<br />
+                                Host: <Link to={`/profile/${trip.author}`} className="text-decoration-none">{trip.author}</Link><br />
                             </div>
                             <div className="tab-pane fade" id="chat"
                                 role="tabpanel" aria-labelledby="chat-tab">
@@ -428,7 +428,9 @@ class Trip extends React.Component {
                         </div>
                         {this.state.requests.length > 0 ? this.state.requests.map((req, index) => {
                             return <div key={index} className="row">
-                                <div className="col">{req.login}</div>
+                                <div className="col">
+                                    <Link to={`/profile/${req.login}`} className="text-decoration-none">{req.login}</Link>
+                                </div>
                                 <div className="col">{req.requestSubstantiation}</div>
                                 <div className="col">
                                     <button className="btn btn-danger btn-sm m-1" onClick={() => this.rejectRequest(req._id)}>Reject</button>

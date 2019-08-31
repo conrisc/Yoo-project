@@ -22,6 +22,7 @@ class MyProfile extends React.Component {
                 type: 'info'
             }
         }
+        console.log(this.props.history);
 
         ls.isLoggedIn({
             login: this.props.login,

@@ -85,7 +85,7 @@ class Trips extends React.Component {
                                 Accommodation: {trip.accommodation}<br />
                             </div>
                             <div className="col">
-                                <Link to={`/trip/${trip._id}`} className="btn btn-primary btn-sm">Check this out!</Link>
+                                <Link to={`/trip/${trip._id}`} className="btn btn-primary btn-sm">Check</Link>
                             </div>
                         </div>
                     })

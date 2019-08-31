@@ -16,7 +16,7 @@ class DefaultMenu extends React.Component {
                         <Link to='/login' className="nav-link">Login</Link>
                     </li>
                     <li className="nav-item">
-                        <Link to='/signup' className="nav-link">Sign up</Link>
+                        <Link to='/signup' className="btn btn-sm btn-primary mx-2 my-1">Sign up</Link>
                     </li>
                 </ul>
         </div>
