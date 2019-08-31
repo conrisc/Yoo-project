@@ -180,6 +180,8 @@ class TripCreator extends React.Component {
                 if (status === 'OK') {
                     this.directionsDisplay.setDirections(response);
                     this.directionsDisplay.setMap(this.map);
+                    this.startMarker.setMap(null);
+                    this.destinationMarker.setMap(null);
                     distanceService.getDistanceMatrix( {
                         origins: [ this.state.startingPoint.location ],
                         destinations: [ this.state.destinationPoint.location ],

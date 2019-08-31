@@ -23,7 +23,7 @@ class UserMenu extends React.Component {
             <div>
                 <ul className="nav justify-content-end">
                     <li className="nav-item">
-                        <Link to="/trips" className="nav-link">Find a trip</Link>
+                        <Link to="/trips" className="nav-link">Find trip</Link>
                     </li>
                     <li className="nav-item">
                         <Link to={`/trips/1/${this.props.login}`} className="nav-link">My trips</Link>
