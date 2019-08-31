@@ -49,8 +49,8 @@ class TripCreator extends React.Component {
             author: this.props.login,
             previewImages: [],
             participants: [],
-            distance: { text: '', value: 0 },
-            duration: { text: '', value: 0 }
+            distance: { text: '-', value: 0 },
+            duration: { text: '-', value: 0 }
         }
 
     }
@@ -193,15 +193,26 @@ class TripCreator extends React.Component {
                                 duration: response.rows[0].elements[0].duration
                             });
                         }
-                        else
+                        else {
+                            this.setState({
+                                distance: { text: '', value: 0 },
+                                duration: { text: '', value: 0 }
+                            });
                             this.props.pushNotification({
                                 title: 'Distance',
                                 time: new Date(),
                                 message: status,
                                 type: 'danger'
                             });
+                        }
                     });
                 } else {
+                    this.setState({
+                        distance: { text: '-', value: 0 },
+                        duration: { text: '-', value: 0 }
+                    });
+                    this.startMarker.setMap(this.map);
+                    this.destinationMarker.setMap(this.map);
                     this.directionsDisplay.setMap(null);
                     this.props.pushNotification({
                         title: 'Location',
