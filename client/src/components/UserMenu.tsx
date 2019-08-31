@@ -29,7 +29,7 @@ class UserMenu extends React.Component {
                         <Link to={`/trips/1/${this.props.login}`} className="nav-link">My trips</Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="/profile" className="nav-link">{this.props.login}</Link>
+                        <Link to="/profile" className="nav-link">Profile</Link>
                     </li>
                     <li className="nav-item">
                         <a className="nav-link" onClick={(e) => this.logout(e)} href="#">Logout</a>

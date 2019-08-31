@@ -282,8 +282,7 @@ class Trip extends React.Component {
 
     shouldDisplayRequestAction() {
         const trip = this.state.trip;
-        return this.props.login !== trip.author && 
-            (!trip.participants || !trip.participants.find(el => el === this.props.login) );
+        return this.props.login !== trip.author;
     }
 
     showParticipantsList() {
@@ -291,10 +290,12 @@ class Trip extends React.Component {
         return (
             <div>
                 {trip.participants && trip.participants.length > 0 ? trip.participants.map((login, index) => {
-                    return <div key={index} className="row">
-                        <div className="col">{login}</div>
+                    return <div key={index} className="row border-bottom mx-2 py-2">
+                        <div className="col">
+                            <Link to={`/profile/${login}`} className="text-decoration-none">{login}</Link>
+                        </div>
                         {trip.author === this.props.login && <div className="col">
-                            <button className="btn btn-danger btn-sm m-1" onClick={() => this.removeParticipant(login)}>Remove</button>
+                            <button className="btn btn-link btn-sm text-decoration-none text-danger p-0 align-top" onClick={() => this.removeParticipant(login)}>Remove</button>
                         </div>}
                     </div>
                 })
@@ -306,8 +307,16 @@ class Trip extends React.Component {
     }
 
     getRequestAction() {
+        const trip = this.state.trip;
         const myRequest = this.state.requests.find(el => el.login === this.props.login);
-        if (!myRequest)
+        const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
+
+
+        if (trip.participants && trip.participants.find(el => el === this.props.login))
+            return <button className="btn btn-success btn-sm m-3" disabled>You are signed up for this trip</button>;
+        else if (availableSpots === 0)
+            return <button className="btn btn-danger btn-sm m-3" disabled>There are no available spots</button>;
+        else if (!myRequest)
             return <button className="btn btn-primary btn-sm m-3" data-toggle="modal" data-target="#exampleModal">Sign for the trip</button>;
         else if (myRequest.status === 'pending')
             return <button className="btn btn-warning btn-sm m-3" disabled>Your request is pending</button>;
@@ -317,6 +326,7 @@ class Trip extends React.Component {
 
     render() {
         const trip = this.state.trip;
+        const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
         return (
             <div>
                 <div className="modal fade" id="exampleModal"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -330,7 +340,7 @@ class Trip extends React.Component {
                         </div>
                         <div className="modal-body">
                             <div>
-                                <h6>Number of participants: 5 (4 spots available)</h6>
+                                <h6>Number of participants: {trip.numberOfPeople} ({availableSpots} spots available)</h6>
                             </div>
                             <form className="simple-form">
                                 <div className="form-group">
@@ -420,7 +430,7 @@ class Trip extends React.Component {
                                 Transport: {trip.transport}<br />
                                 Type of transport: {trip.transportType}<br />
                                 Number of people: {trip.numberOfPeople}<br />
-                                Available slots: 2<br />
+                                <span className={availableSpots === 0 ? 'text-danger': ''}>Available spots: {availableSpots}</span><br />
                                 Accommodation: {trip.accommodation}<br />
                                 Host: {trip.author}<br />
                             </div>

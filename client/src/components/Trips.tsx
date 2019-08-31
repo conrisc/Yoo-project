@@ -53,6 +53,7 @@ class Trips extends React.Component {
                 <div>
                 {
                     this.state.trips.map((trip, index ) => {
+                        const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
                         return <div key={index} className="shadow-sm p-3 mb-2 bg-white row">
                             <div className="offer-img bg-dark">
                                 {trip.images && trip.images[0] &&
@@ -81,7 +82,7 @@ class Trips extends React.Component {
                                 Transport: {trip.transport}<br />
                                 Transport: {trip.transportType}<br />
                                 Number of people: {trip.numberOfPeople}<br />
-                                Available slots: 3<br />
+                                <span className={availableSpots === 0 ? 'text-danger': ''}>Available spots: {availableSpots}</span><br />
                                 Accommodation: {trip.accommodation}<br />
                             </div>
                             <div className="col">
