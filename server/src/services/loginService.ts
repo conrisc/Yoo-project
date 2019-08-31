@@ -25,7 +25,7 @@ function signIn(req: express.Request, res: express.Response) {
 
 function signUp(req: express.Request, res: express.Response) {
     const { login, password, name, lastName } = req.body;
-    if (!login || login.length < 4)
+    if (!login || login.length < 3)
         res.send({
             'msg': 'Login is too short!',
             'status': 400

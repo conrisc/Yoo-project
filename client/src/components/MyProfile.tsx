@@ -98,13 +98,17 @@ class MyProfile extends React.Component {
                             <div className="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                                 <div className="px-5 py-4">
                                     <div className="row my-3">
-                                        <div className="d-inline-block">
-                                            <img className="avatar-l" src={`data:image/png;base64, ${avatar}`} />
+                                        <div className="col">
+                                            <div className="d-inline-block">
+                                                <img className="avatar-l" src={`data:image/png;base64, ${avatar}`} />
+                                            </div>
+                                            <h3 className="d-inline-block ml-3">{this.props.login}</h3>
                                         </div>
-                                        <h3 className="d-inline-block ml-3">{this.props.login}</h3>
                                         {this.state.infoBox.message && 
-                                            <div className={`alert alert-${this.state.infoBox.type} m-4`} role="alert">
-                                                {this.state.infoBox.message}
+                                            <div className="col-auto">
+                                                <div className={`alert alert-${this.state.infoBox.type} m-4`} role="alert">
+                                                    {this.state.infoBox.message}
+                                                </div>
                                             </div>
                                         }
                                     </div>
@@ -121,7 +125,7 @@ class MyProfile extends React.Component {
                                                 </div>
                                                 <div className="form-group">
                                                     <label htmlFor="name">Name</label>
-                                                    <input type="text" name="name" className="form-control" value={this.state.name} onChange={(e) => this.handleInputChange(e)}/>
+                                                    <input type="text" name="name" className="form-control fomr=control=sm" value={this.state.name} onChange={(e) => this.handleInputChange(e)}/>
                                                 </div>
                                                 <div className="form-group">
                                                     <label htmlFor="lastname">Lastname</label>
