@@ -49,9 +49,10 @@ class TripService {
     public getTrips(req: express.Request, res: express.Response) {
         const skip = Number(req.params.skip || 0);
         const limit = Number(req.params.limit || 0);
+        const data = req.params.author ? { author: req.params.author } : {};
         Promise.all([
-            ms.find('trips', {}, skip, limit),
-            ms.count('trips', {})
+            ms.find('trips', data, skip, limit),
+            ms.count('trips', data)
         ])
         .then(([trips, count]) => {
                 res.send({
@@ -142,16 +143,6 @@ class TripService {
             .then((requests: []) => {
                 res.send({
                     requests
-                });
-            });
-    }
-
-    public getUserTrips(req: express.Request, res: express.Response) {
-        const author = req.body.author;
-        ms.find('trips', { author })
-            .then((trips: []) => {
-                res.send({
-                    'trips': trips
                 });
             });
     }

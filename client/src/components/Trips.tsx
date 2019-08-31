@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux'
 
 import { TripService } from '../services';
 import { Pagination } from './Pagination';
@@ -15,11 +16,12 @@ class Trips extends React.Component {
         this.state = {
             trips: [],
             tripsCount: 0,
-            tripsPerPage: 2,
-            currentPage: Number(this.props.match.params.pageNumber) || 1
+            tripsPerPage: 10,
+            currentPage: Number(this.props.match.params.pageNumber) || 1,
+            author: this.props.match.params.author || ''
         }
         const skip = (this.state.currentPage - 1) * this.state.tripsPerPage;
-        ts.getTrips({ skip, limit: this.state.tripsPerPage })
+        ts.getTrips({ skip, limit: this.state.tripsPerPage, author: this.state.author })
             .then(data => {
                 this.setState({ trips: data.trips, tripsCount: data.tripsCount });
             })
@@ -28,11 +30,14 @@ class Trips extends React.Component {
 
     componentDidUpdate() {
         const newPage = Number(this.props.match.params.pageNumber) || 1;
-        if (this.state.currentPage !== newPage) {
+        const author = this.props.match.params.author || '';
+        if (this.state.currentPage !== newPage ||
+            this.state.author != author
+           ) {
             const skip = (newPage - 1) * this.state.tripsPerPage;
-            ts.getTrips({ skip, limit: this.state.tripsPerPage })
+            ts.getTrips({ skip, limit: this.state.tripsPerPage, author })
                 .then(data => {
-                    this.setState({ trips: data.trips, tripsCount: data.tripsCount, currentPage: newPage});
+                    this.setState({ trips: data.trips, tripsCount: data.tripsCount, currentPage: newPage, author});
                 })
         }
     }
@@ -42,6 +47,9 @@ class Trips extends React.Component {
         const pages = Math.ceil(this.state.tripsCount / this.state.tripsPerPage);
         return (
             <div>
+                { this.state.author === this.props.login &&
+                    <Link to='/create-trip' className="btn btn-primary btn-sm my-3">Create a trip</Link>
+                }
                 <div>
                 {
                     this.state.trips.map((trip, index ) => {
@@ -83,11 +91,22 @@ class Trips extends React.Component {
                     })
                 }
                 </div>
-                <Pagination currentPage={currentPage} pages={pages} link="/trips" />
+                <Pagination currentPage={currentPage} pages={pages} linkBefore="/trips" linkAfter={`${this.state.author}`}  />
             </div>
         );
     }
 }
+
+
+const mapStateToProps = (state) => {
+  return { login: state.login };
+};
+const mapDispatchToProps = () => {
+  return {}
+};
+
+// @ts-ignore
+Trips = connect(mapStateToProps, mapDispatchToProps)(Trips);
 
 export {
    Trips 

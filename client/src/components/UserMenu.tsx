@@ -26,7 +26,7 @@ class UserMenu extends React.Component {
                         <Link to="/trips" className="nav-link">Find a trip</Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="/my-trips" className="nav-link">My trips</Link>
+                        <Link to={`/trips/1/${this.props.login}`} className="nav-link">My trips</Link>
                     </li>
                     <li className="nav-item">
                         <Link to="/profile" className="nav-link">{this.props.login}</Link>

@@ -1,14 +1,11 @@
 class TripService {
     constructor() {}
 
-    public getTrips({ skip, limit }) {
+    public getTrips({ skip, limit, author}) {
         skip = skip >= 0 ? skip : 0;
         limit = limit >=0 ? limit : 0;
-        return this.getData(`http://localhost:3001/trips/${skip}/${limit}`);
-    }
-
-    public getUserTrips(author) {
-        return this.postData(`http://localhost:3001/trips/user`, {author});
+        author = author || '';
+        return this.getData(`http://localhost:3001/trips/${skip}/${limit}/${author}`);
     }
 
     public getTrip(id) {
