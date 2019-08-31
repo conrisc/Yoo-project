@@ -11,9 +11,9 @@ class TripService {
 
     public createTrip(req: express.Request, res: express.Response) {
         const data = req.body;
+        console.log(data);
         ms.insert('trips', data)
             .then((response) => {
-                console.log(response);
                 res.send({
                     'msg': 'Trip has been added!',
                     'tripId': response.insertedId,
@@ -155,7 +155,6 @@ class TripService {
     public removeParticipant(req: express.Request, res: express.Response) {
         const { tripId, login } = req.body;
         const id = new ObjectId(tripId);
-        console.log(id, login);
         ms.pull('trips', { _id: id }, { participants: login })
             .then((e) => {
                 res.send({

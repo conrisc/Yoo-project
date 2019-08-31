@@ -46,18 +46,19 @@ class Login extends React.Component {
 
     render() {
         return (
-            <form className="px-5 py-4 simple-form m-auto" onSubmit={(e) => this.signIn(e)} >
-                <h2 className="text-center">Sign in</h2>
+            <form className="px-5 py-4 simple-form m-auto text-center" onSubmit={(e) => this.signIn(e)} >
+                <h5 className="mb-5">Just sign in and enjoy making new friends to travel with.</h5>
+                <h2>Sign in</h2>
                 {this.state.errorMsg && <div className="alert alert-danger"><h6>{this.state.errorMsg}</h6></div>}
-                <div className="form-group">
+                <div className="form-group text-left">
                     <label htmlFor="login">Login</label>
                     <input type="text" name="login" className="form-control" placeholder="login" onChange={(e) => this.handleInputChange(e)}/>
                 </div>
-                <div className="form-group">
+                <div className="form-group text-left">
                     <label htmlFor="password">Password</label>
                     <input type="password" name="password" className="form-control" placeholder="password" onChange={(e) => this.handleInputChange(e)}/>
                 </div>
-                <div className="text-center">
+                <div>
                     <input type="submit" value="Sign in" className="btn btn-primary"/>
                 </div>
             </form>

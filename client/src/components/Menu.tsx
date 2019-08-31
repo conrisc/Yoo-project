@@ -14,7 +14,7 @@ class Menu extends React.Component {
 
     render() {
         return (
-            <div className="col text-right">
+            <div className="col text-right pt-1">
                 {this.props.login === '' ?
                     <div>
                         <DefaultMenu />

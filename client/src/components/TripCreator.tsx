@@ -36,21 +36,21 @@ class TripCreator extends React.Component {
         this.uploadImagesInputRef = React.createRef();
 
         this.state = {
-            startingPoint: { text: '', location: {} },
-            destinationPoint: { text: '', location: {} },
+            startingPoint: { value: '', location: {}, isValid: true },
+            destinationPoint: { value: '', location: {}, isValid: true },
             transport: 'own',
             transportType: 'car',
             numberOfPeople: 1,
             accommodation: 'provided',
-            startDate: '',
-            endDate: '',
-            tripDescrpition: '',
+            startDate: { value: '', isValid: true },
+            endDate: { value: '', isValid: true },
+            tripDescription: { value: '', isValid: true },
             transportTypeClass: 'yoo-hide',
             author: this.props.login,
             previewImages: [],
             participants: [],
             distance: { text: '-', value: 0 },
-            duration: { text: '-', value: 0 }
+            duration: { text: '-', value: 0 },
         }
 
     }
@@ -94,8 +94,11 @@ class TripCreator extends React.Component {
         geocoder.geocode({'location': latlng}, (results, status) => {
             if (status === 'OK') {
                 if (results[0]) {
-                    console.log(results[0]);
-                    this.setState({ [point]: { text: results[0].formatted_address.split(',')[0], location: latlng } }, () => this.updateMap());
+                    this.setState({ [point]: { 
+                        value: results[0].formatted_address.split(',')[0],
+                        location: latlng,
+                        isValid: this.state[point].isValid
+                    } }, () => this.updateMap());
                 } else {
                     this.props.pushNotification({
                         title: 'Geocoder',
@@ -121,15 +124,22 @@ class TripCreator extends React.Component {
         }, callback);
     }
 
+    handleValueChange(event, callback = () => {}) {
+        const oldItem = this.state[event.target.name];
+        this.setState({
+            [event.target.name]: { ...oldItem, value: event.target.value }
+        }, callback);
+    }
+
     handleStartPointChange(event) {
         const { name, value } = event.target;
-        this.setState({ startingPoint: { text: value, location: this.state.startingPoint.location } })
+        this.setState({ startingPoint: { value, location: this.state.startingPoint.location, isValid: this.state.startingPoint.isValid } })
         this.handleStartPointChangeDebounced(name, value);
     }
 
     handleDestinationPointChange(event) {
         const { name, value } = event.target;
-        this.setState({ destinationPoint: { text: value, location: this.state.destinationPoint.location } })
+        this.setState({ destinationPoint: { value, location: this.state.destinationPoint.location, isValid: this.state.destinationPoint.isValid } })
         this.handleDestinationPointChangeDebounced(name, value);
     }
 
@@ -142,12 +152,12 @@ class TripCreator extends React.Component {
             if (status === 'OK') {
                 const latLng = results[0].geometry.location;
                 if (name === 'startingPoint') {
-                    this.setState({ startingPoint: { text: value, location: latLng} });
+                    this.setState({ startingPoint: { value, location: latLng, isValid: this.state.startingPoint.isValid} });
                     this.startMarker.setPosition(latLng);
                     this.startMarker.setMap(this.map);
                 }
                 if (name === 'destinationPoint') {
-                    this.setState({ destinationPoint: { text: value, location: latLng } });
+                    this.setState({ destinationPoint: { value, location: latLng, isValid: this.state.destinationPoint.isValid} });
                     this.destinationMarker.setPosition(latLng);
                     this.destinationMarker.setMap(this.map);
                 }
@@ -164,7 +174,7 @@ class TripCreator extends React.Component {
     }
 
     updateMap() {
-        if (this.state.startingPoint.text && this.state.destinationPoint.text) {
+        if (this.state.startingPoint.value && this.state.destinationPoint.value) {
             this.updateGroundRoute();
         } 
     }
@@ -279,6 +289,8 @@ class TripCreator extends React.Component {
     }
 
     createTrip() {
+        if (!this.isFormValid()) return;
+
         const tripData = {
             startingPoint: this.state.startingPoint,
             destinationPoint: this.state.destinationPoint,
@@ -286,18 +298,18 @@ class TripCreator extends React.Component {
             transportType: this.state.transportType,
             numberOfPeople: this.state.numberOfPeople,
             accommodation: this.state.accommodation,
-            startDate: this.state.startDate,
-            endDate: this.state.endDate,
-            description: this.state.tripDescription,
+            startDate: this.state.startDate.value,
+            endDate: this.state.endDate.value,
+            description: this.state.tripDescription.value,
             author: this.state.author,
             images: []
         };
+        console.log(tripData);
 
         const ts = new TripService();
 
         ts.createTrip(tripData)
             .then(response => {
-                console.log(response);
                 const formData = new FormData();
                 for (let i = 0; i < this.state.previewImages.length; i++) {
                     formData.append(`image_${i}`, this.state.previewImages[i]);
@@ -305,9 +317,30 @@ class TripCreator extends React.Component {
                 if (this.state.previewImages.length > 0)
                     ts.uploadTripImages(formData)
                         .then(response => {
-                            console.log(response);
                         })
             });
+    }
+
+    isFormValid() {
+        let isValid = true;
+
+        const newState: any = { 
+            startingPoint: { ...this.state.startingPoint },
+            destinationPoint: { ...this.state.destinationPoint },
+            startDate: { ...this.state.startDate },
+            endDate: { ...this.state.endDate },
+            tripDescription: { ...this.state.tripDescription }
+        }
+
+        for (let property in newState) {
+            const item = newState[property];
+            item.isValid = item.value !== '';
+            isValid = isValid && item.isValid;
+        }
+
+        this.setState(newState);
+
+        return isValid;
     }
 
     showFiles() {
@@ -357,15 +390,23 @@ class TripCreator extends React.Component {
                     <form className="col simple-form">
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm" htmlFor="inputStart">Starting point</label>
-                            <input className="form-control form-control-sm" id="inputStart" value={this.state.startingPoint.text}
+                            <input className={'form-control form-control-sm' + (this.state.startingPoint.isValid ? '' : ' is-invalid')}
+                            id="inputStart" value={this.state.startingPoint.value}
                             type="text" placeholder="What's your starting point?" name="startingPoint"
                             onChange={e => this.handleStartPointChange(e)}/>
+                            <div className="invalid-feedback">
+                                Please provide a strting point.
+                            </div>
                         </div>
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm" htmlFor="inputDestination">Destination</label>
-                            <input className="form-control form-control-sm" id="inputDestination" value={this.state.destinationPoint.text}
+                            <input className={'form-control form-control-sm' + (this.state.destinationPoint.isValid ? '' : ' is-invalid')}
+                            id="inputDestination" value={this.state.destinationPoint.value}
                             type="text" placeholder="Where would you like to go?"
                             name="destinationPoint" onChange={e => this.handleDestinationPointChange(e)} />
+                            <div className="invalid-feedback">
+                                Please provide a destination.
+                            </div>
                         </div>
                         <div className="form-group">
                             <label className="col-form-label col-form-label-sm">Transport</label><br />
@@ -405,11 +446,21 @@ class TripCreator extends React.Component {
                         <div className="row">
                             <div className="form-group col w-50">
                                 <label className="col-form-label col-form-label-sm" htmlFor="inputDeparture">Date of departure</label>
-                                <input id="inputDeparture" className="form-control form-control-sm" type="date" name="startDate" onChange={e => this.handleInputChange(e)} />
+                                <input id="inputDeparture"
+                                className={'form-control form-control-sm' + (this.state.startDate.isValid ? '' : ' is-invalid')} 
+                                type="date" name="startDate" onChange={e => this.handleValueChange(e)} />
+                                <div className="invalid-feedback">
+                                    Please provide the date of departure.
+                                </div>
                             </div>
                             <div className="form-group col w-50">
                                 <label className="col-form-label col-form-label-sm" htmlFor="inputReturn">Date of return</label>
-                                <input id="inputReturn" className="form-control form-control-sm" type="date" name="endDate" onChange={e => this.handleInputChange(e)} />
+                                <input id="inputReturn"
+                                className={'form-control form-control-sm' + (this.state.endDate.isValid ? '' : ' is-invalid')}
+                                type="date" name="endDate" onChange={e => this.handleValueChange(e)} />
+                                <div className="invalid-feedback">
+                                    Please provide the date of return.
+                                </div>
                             </div>
                         </div>
                         <div className="row">
@@ -426,9 +477,12 @@ class TripCreator extends React.Component {
                 <div className="row mt-2 container">
                     <form className="col simple-form">
                         <div className="form-group">
-                            <textarea className="form-control form-control-sm" placeholder="Description of your trip" name="tripDescription"
-                                onChange={e => this.handleInputChange(e)}>
+                            <textarea className={'form-control form-control-sm' + (this.state.tripDescription.isValid ? '' : ' is-invalid')}
+                            placeholder="Description of your trip" name="tripDescription" onChange={e => this.handleValueChange(e)}>
                             </textarea>
+                            <div className="invalid-feedback">
+                                Please provide a trip description.
+                            </div>
                         </div>
                     </form>
                 </div>

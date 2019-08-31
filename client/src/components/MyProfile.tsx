@@ -22,7 +22,6 @@ class MyProfile extends React.Component {
                 type: 'info'
             }
         }
-        console.log(this.props.history);
 
         ls.isLoggedIn({
             login: this.props.login,
@@ -58,9 +57,10 @@ class MyProfile extends React.Component {
         if (this.state.password === this.state.confirmPassword)
             ls.updateUserData({
                 login: this.props.login,
+                password: this.state.password,
                 name: this.state.name,
                 lastName: this.state.lastName,
-                password: this.state.password
+                description: this.state.description
             }).then(data => {
                 this.setState({
                     infoBox: {

@@ -9,9 +9,9 @@ class DefaultMenu extends React.Component {
     render() {
         return <div>
                 <ul className="nav justify-content-end">
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                         <Link to='/' className="nav-link">Home</Link>
-                    </li>
+                    </li> */}
                     <li className="nav-item">
                         <Link to='/login' className="nav-link">Login</Link>
                     </li>

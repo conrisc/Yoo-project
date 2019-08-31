@@ -16,7 +16,7 @@ class Trips extends React.Component {
         this.state = {
             trips: [],
             tripsCount: 0,
-            tripsPerPage: 10,
+            tripsPerPage: 5,
             currentPage: Number(this.props.match.params.pageNumber) || 1,
             author: this.props.match.params.author || ''
         }
@@ -46,13 +46,12 @@ class Trips extends React.Component {
         const pages = Math.ceil(this.state.tripsCount / this.state.tripsPerPage);
         return (
             <div>
-                { this.state.author === this.props.login &&
-                    <Link to='/create-trip' className="btn btn-primary btn-sm my-3">Create a trip</Link>
-                }
                 <div>
                 {
                     this.state.trips.map((trip, index ) => {
+                        console.log(trip)
                         const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
+                        const tripDuration = (new Date(trip.endDate.value).getTime() - new Date(trip.startDate.value).getTime()) / (1000 * 60 * 60 * 24);
                         return <div key={index} className="shadow-sm p-3 mb-2 bg-white row">
                             <div className="offer-img bg-dark">
                                 {trip.images && trip.images[0] &&
@@ -62,17 +61,17 @@ class Trips extends React.Component {
                             <div className="col-5">
                                 <div className="row mt-4">
                                     <div className="col-auto">
-                                        {trip.startingPoint && <h3 className="d-inline yoo-text-1">{trip.startingPoint.text}</h3>}
+                                        {trip.startingPoint && <h3 className="d-inline yoo-text-1">{trip.startingPoint.value}</h3>}
                                         <p className="text-center">{trip.startDate}</p>
                                     </div>
                                     <div className="col text-center">
                                         <svg height="50px" width="100%" xmlns="http://www.w3.org/2000/svg">
                                             <line x1="0" y1="25" x2="100%" y2="25" stroke="#CCCCCC" strokeWidth="2" />
                                         </svg>
-                                        <p>5 days</p>
+                                        <p>{tripDuration} days</p>
                                     </div>
                                     <div className="col-auto">
-                                        {trip.destinationPoint && <h3 className="d-inline yoo-text-1">{trip.destinationPoint.text}</h3>}
+                                        {trip.destinationPoint && <h3 className="d-inline yoo-text-1">{trip.destinationPoint.value}</h3>}
                                         <p className="text-center">{trip.endDate}</p>
                                     </div>
                                 </div>

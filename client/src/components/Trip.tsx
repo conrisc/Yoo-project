@@ -59,7 +59,7 @@ class Trip extends React.Component {
 
     updateMap() {
         this.directionsDisplay = new google.maps.DirectionsRenderer();
-        if (this.state.trip.startingPoint.text && this.state.trip.destinationPoint.text) {
+        if (this.state.trip.startingPoint.value && this.state.trip.destinationPoint.value) {
             this.updateGroundRoute();
             this.updateFlightRoute();
         } 
@@ -295,6 +295,7 @@ class Trip extends React.Component {
     render() {
         const trip = this.state.trip;
         const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
+        const tripDuration = (new Date(trip.endDate.value).getTime() - new Date(trip.startDate.value).getTime()) / (1000 * 60 * 60 * 24);
         return (
             <div>
                 <div className="modal fade" id="exampleModal"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -331,18 +332,18 @@ class Trip extends React.Component {
                     <div className="col-5">
                         <div className="row mt-4">
                             <div className="col-auto">
-                                {trip.startingPoint && <h3 className="d-inline yoo-text-1">{trip.startingPoint.text}</h3> }
-                                <p className="text-center">{trip.startDate}</p>
+                                {trip.startingPoint && <h3 className="d-inline yoo-text-1">{trip.startingPoint.value}</h3> }
+                                <p className="text-center">{trip.startDate.value}</p>
                             </div>
                             <div className="col text-center">
                                 <svg height="50px" width="100%" xmlns="http://www.w3.org/2000/svg">
                                     <line x1="0" y1="25" x2="100%" y2="25" stroke="#CCCCCC" strokeWidth="2" />
                                 </svg>
-                                <p>5 days</p>
+                                <p>{tripDuration} days</p>
                             </div>
                             <div className="col-auto">
-                                {trip.destinationPoint && <h3 className="d-inline yoo-text-1">{trip.destinationPoint.text}</h3>}
-                                <p className="text-center">{trip.endDate}</p>
+                                {trip.destinationPoint && <h3 className="d-inline yoo-text-1">{trip.destinationPoint.value}</h3>}
+                                <p className="text-center">{trip.endDate.value}</p>
                             </div>
                         </div>
                     </div>

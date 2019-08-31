@@ -29,7 +29,7 @@ function injectConfiguration(wss: WebSocket.Server) {
     const addClientToChat = (dataFromClient: any, ws: WebSocket) => {
         tripClients[dataFromClient.tripId] = tripClients[dataFromClient.tripId] || [];
         tripClients[dataFromClient.tripId].push(ws);
-        console.log(`Added user ${dataFromClient.username} to trip chat ${dataFromClient.tripId}`);
+        // console.log(`Added user ${dataFromClient.username} to trip chat ${dataFromClient.tripId}`);
 
         // const response = {
         //     message: dataFromClient.message,
@@ -50,10 +50,10 @@ function injectConfiguration(wss: WebSocket.Server) {
     }
 
     wss.on('connection', function (ws: WebSocket) {
-        console.log('new connection');
+        // console.log('new connection');
 
         ws.on('message', function(message: any) {
-            console.log(message);
+            // console.log(message);
             const dataFromClient = JSON.parse(message);
             switch(dataFromClient.type) {
                 case dataTypes.JOIN_CHAT:

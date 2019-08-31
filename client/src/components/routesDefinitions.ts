@@ -8,7 +8,7 @@ import { SignUp } from './SignUp';
 import { Trip } from './Trip';
 
 const routesDefinitions = [
-    { path: '/', component: Home },
+    { path: '/', component: Login },
     { path: '/login', component: Login },
     { path: '/trips/:pageNumber?/:author?', component: Trips },
     { path: '/trip/:tripId', component: Trip },
