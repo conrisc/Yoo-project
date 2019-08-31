@@ -25,7 +25,6 @@ class Trips extends React.Component {
             .then(data => {
                 this.setState({ trips: data.trips, tripsCount: data.tripsCount });
             })
-
     }
 
     componentDidUpdate() {

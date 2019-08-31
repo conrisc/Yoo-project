@@ -88,51 +88,19 @@ class Trip extends React.Component {
     }
 
     updateFlightRoute() {
-        const geocoder = new google.maps.Geocoder();
-
-        const second = (res) => {
-            geocoder.geocode({
-                'address': this.state.trip.destinationPoint.location
-            }, (results, status) => {
-                if (status === 'OK') {
-                    var flightPlanCoordinates = [
-                        res[0].geometry.location,
-                        results[0].geometry.location
-                    ];
-                    this.flightPath = new google.maps.Polyline({
-                        path: flightPlanCoordinates,
-                        geodesic: true,
-                        strokeColor: '#FF0000',
-                        strokeOpacity: 1.0,
-                        strokeWeight: 2
-                    });
-
-                    this.flightPath.setMap(this.map);
-                } else {
-                    this.props.pushNotification({
-                        title: 'Location',
-                        time: new Date(),
-                        message: 'Couldn\'t find second location',
-                        type: 'danger'
-                    });
-                }
-            });
-        };
-        geocoder.geocode({
-            'address': this.state.trip.startingPoint.location
-        }, (results, status) => {
-            if (this.flightPath) this.flightPath.setMap(null);
-            if (status === 'OK') {
-                second(results);
-            } else {
-                this.props.pushNotification({
-                    title: 'Location',
-                    time: new Date(),
-                    message: 'Couldn\'t find first location',
-                    type: 'danger'
-                });
-            }
+        var flightPlanCoordinates = [
+            this.state.trip.startingPoint.location,
+            this.state.trip.destinationPoint.location
+        ];
+        this.flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
         });
+
+        this.flightPath.setMap(this.map);
     }
 
     signForTrip() {
