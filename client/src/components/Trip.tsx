@@ -367,7 +367,7 @@ class Trip extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-8">
-                        <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
+                        <div id="carouselExampleControls" className="carousel slide">
                         <div className="carousel-inner bg-dark container-75vh">
                             <div className="carousel-item active">
                                 <div ref={this.mapRef} className="d-block w-100 container-75vh"></div>

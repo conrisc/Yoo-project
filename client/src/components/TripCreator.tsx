@@ -337,7 +337,7 @@ class TripCreator extends React.Component {
     }
 
     showSth() {
-        return <div id="carouselExampleControls" className="carousel slide col-8" data-ride="carousel">
+        return <div id="carouselExampleControls" className="carousel slide col-8">
             <div className="carousel-inner bg-dark container-75vh">
                 <div className="carousel-item active">
                     <div ref={this.mapRef} className="d-block w-100 container-75vh"></div>
