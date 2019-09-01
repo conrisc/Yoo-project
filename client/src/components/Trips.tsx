@@ -53,49 +53,51 @@ class Trips extends React.Component {
             <div>
                 <div className="mx-5">
                 {
-                    this.state.trips.map((trip, index ) => {
-                        const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
-                        const tripDuration = (new Date(trip.endDate).getTime() - new Date(trip.startDate).getTime()) / (1000 * 60 * 60 * 24);
-                        return <div key={index} className="shadow-sm p-3 mb-2 bg-white row">
-                            <div className="offer-img bg-dark">
-                                {trip.images && trip.images[0] &&
-                                    <img src={`data:image/jpg;base64, ${trip.images[0]}`} />
-                                }
-                            </div>
-                            <div className="col-6">
-                                <div className="row mt-4">
-                                    <div className="col-auto">
-                                        {trip.startingPoint && <h3 className="d-inline yoo-text-1">{trip.startingPoint.value}</h3>}
-                                        <p className="text-center">{trip.startDate}</p>
-                                    </div>
-                                    <div className="col text-center">
-                                        <svg height="50px" width="100%" xmlns="http://www.w3.org/2000/svg">
-                                            <line x1="0" y1="25" x2="100%" y2="25" stroke="#CCCCCC" strokeWidth="2" />
-                                        </svg>
-                                        <p>{tripDuration} days</p>
-                                    </div>
-                                    <div className="col-auto">
-                                        {trip.destinationPoint && <h3 className="d-inline yoo-text-1">{trip.destinationPoint.value}</h3>}
-                                        <p className="text-center">{trip.endDate}</p>
+                    this.state.trips.length > 0 ?
+                        this.state.trips.map((trip, index ) => {
+                            const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
+                            const tripDuration = (new Date(trip.endDate).getTime() - new Date(trip.startDate).getTime()) / (1000 * 60 * 60 * 24);
+                            return <div key={index} className="shadow-sm p-3 mb-2 bg-white row">
+                                <div className="offer-img bg-dark">
+                                    {trip.images && trip.images[0] &&
+                                        <img src={`data:image/jpg;base64, ${trip.images[0]}`} />
+                                    }
+                                </div>
+                                <div className="col-6">
+                                    <div className="row mt-4">
+                                        <div className="col-auto">
+                                            {trip.startingPoint && <h3 className="d-inline yoo-text-1">{trip.startingPoint.value}</h3>}
+                                            <p className="text-center">{trip.startDate}</p>
+                                        </div>
+                                        <div className="col text-center">
+                                            <svg height="50px" width="100%" xmlns="http://www.w3.org/2000/svg">
+                                                <line x1="0" y1="25" x2="100%" y2="25" stroke="#CCCCCC" strokeWidth="2" />
+                                            </svg>
+                                            <p>{tripDuration} days</p>
+                                        </div>
+                                        <div className="col-auto">
+                                            {trip.destinationPoint && <h3 className="d-inline yoo-text-1">{trip.destinationPoint.value}</h3>}
+                                            <p className="text-center">{trip.endDate}</p>
+                                        </div>
                                     </div>
                                 </div>
+                                <div className="col-3">
+                                    <SingleDetail compact={true} infoName="Transport" infoValue={trip.transport} />
+                                    <SingleDetail compact={true} infoName="Type of transport" infoValue={trip.transport !== 'own' ? trip.transportType : '-'} />
+                                    <SingleDetail compact={true} infoName="Number of people" infoValue={trip.numberOfPeople} />
+                                    <SingleDetail compact={true} infoName="Available spots" infoValue={availableSpots} />
+                                    <SingleDetail compact={true} infoName="Accommodation" infoValue={trip.accommodation} />
+                                    <SingleDetail compact={true} infoName="Author" infoValue={<Link to={`/profile/${trip.author}`} className="text-decoration-none">{trip.author}</Link>} />
+                                </div>
+                                <div className="col mt-5">
+                                    <Link to={`/trip/${trip._id}`} className="btn btn-primary btn-sm m-1 w-100">Check</Link>
+                                    {this.props.login === trip.author &&
+                                        <button className="btn btn-danger btn-sm m-1 w-100" onClick={() => this.removeTrip(trip._id)}>Remove</button>
+                                    }
+                                </div>
                             </div>
-                            <div className="col-3">
-                                <SingleDetail compact={true} infoName="Transport" infoValue={trip.transport} />
-                                <SingleDetail compact={true} infoName="Type of transport" infoValue={trip.transport !== 'own' ? trip.transportType : '-'} />
-                                <SingleDetail compact={true} infoName="Number of people" infoValue={trip.numberOfPeople} />
-                                <SingleDetail compact={true} infoName="Available spots" infoValue={availableSpots} />
-                                <SingleDetail compact={true} infoName="Accommodation" infoValue={trip.accommodation} />
-                                <SingleDetail compact={true} infoName="Author" infoValue={<Link to={`/profile/${trip.author}`} className="text-decoration-none">{trip.author}</Link>} />
-                            </div>
-                            <div className="col mt-5">
-                                <Link to={`/trip/${trip._id}`} className="btn btn-primary btn-sm m-1 w-100">Check</Link>
-                                {this.props.login === trip.author &&
-                                    <button className="btn btn-danger btn-sm m-1 w-100" onClick={() => this.removeTrip(trip._id)}>Remove</button>
-                                }
-                            </div>
-                        </div>
-                    })
+                        }) :
+                        <h6>There are no trips</h6>
                 }
                 </div>
                 <Pagination currentPage={currentPage} pages={pages} linkBefore="/trips" linkAfter={`${this.state.author}`}  />
