@@ -9,7 +9,7 @@ class Header extends React.Component {
             <div className="shadow-sm mb-2 bg-white yoo-text-1 px-4 py-2 header">
                 <div className="row">
                     <div className="col col-lg-5">
-                        <h1 className="mx-3">Yoo app</h1>
+                        <h1 className="mx-3">Justravel</h1>
                     </div>
                     <Menu />
                 </div>
