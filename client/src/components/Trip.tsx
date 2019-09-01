@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 
+import { SingleDetail } from './SingleDetail';
 import { TripService } from '../services';
+
 const ts = new TripService();
 
 // @ts-ignore
@@ -61,12 +63,12 @@ class Trip extends React.Component {
     updateMap() {
         this.directionsDisplay = new google.maps.DirectionsRenderer();
         if (this.state.trip.startingPoint.value && this.state.trip.destinationPoint.value) {
-            this.updateGroundRoute();
-            this.updateFlightRoute();
+            if (this.state.trip.transportType !== 'plane') this.setGroundRoute();
+            else this.setFlightRoute();
         } 
     }
 
-    updateGroundRoute() {
+    setGroundRoute() {
         const directionService = new google.maps.DirectionsService();
         directionService.route({
             origin: this.state.trip.startingPoint.location,
@@ -88,7 +90,7 @@ class Trip extends React.Component {
         });
     }
 
-    updateFlightRoute() {
+    setFlightRoute() {
         var flightPlanCoordinates = [
             this.state.trip.startingPoint.location,
             this.state.trip.destinationPoint.location
@@ -280,7 +282,6 @@ class Trip extends React.Component {
         const myRequest = this.state.requests.find(el => el.login === this.props.login);
         const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
 
-
         if (trip.participants && trip.participants.find(el => el === this.props.login))
             return <button className="btn btn-success btn-sm m-3" disabled>You are signed up for this trip</button>;
         else if (availableSpots === 0)
@@ -340,7 +341,7 @@ class Trip extends React.Component {
                 </div>
                 {this.state.requestResponse && <div className="alert alert-primary" role="alert">{this.state.requestResponse}</div>}
                 <div className="row">
-                    <div className="col-5">
+                    <div className="col-8 px-5">
                         <div className="row mt-4">
                             <div className="col-auto">
                                 {trip.startingPoint && <h3 className="d-inline yoo-text-1">{trip.startingPoint.value}</h3> }
@@ -407,12 +408,12 @@ class Trip extends React.Component {
                         <div className="tab-content" id="myTabContent">
                             <div className="tab-pane fade show active" id="details"
                                 role="tabpanel" aria-labelledby="details-tab">
-                                Transport: {trip.transport}<br />
-                                Type of transport: {trip.transportType}<br />
-                                Number of people: {trip.numberOfPeople}<br />
-                                <span className={availableSpots === 0 ? 'text-danger': ''}>Available spots: {availableSpots}</span><br />
-                                Accommodation: {trip.accommodation}<br />
-                                Author: <Link to={`/profile/${trip.author}`} className="text-decoration-none">{trip.author}</Link><br />
+                                <SingleDetail infoName="Transport" infoValue={trip.transport} />
+                                <SingleDetail infoName="Type of transport" infoValue={trip.transport !== 'own' ? trip.transportType : '-'} />
+                                <SingleDetail infoName="Number of people" infoValue={trip.numberOfPeople} />
+                                <SingleDetail infoName="Available spots" infoValue={availableSpots} />
+                                <SingleDetail infoName="Accommodation" infoValue={trip.accommodation} />
+                                <SingleDetail infoName="Author" infoValue={<Link to={`/profile/${trip.author}`} className="text-decoration-none">{trip.author}</Link>} />
                             </div>
                             <div className="tab-pane fade" id="chat"
                                 role="tabpanel" aria-labelledby="chat-tab">
@@ -426,7 +427,8 @@ class Trip extends React.Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col">
+                    <div className="col my-4">
+                        <h6>Trip description</h6>
                         {trip.description}
                     </div>
                 </div>

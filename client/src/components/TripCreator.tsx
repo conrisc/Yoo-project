@@ -69,6 +69,12 @@ class TripCreator extends React.Component {
         this.destinationMarker = new google.maps.Marker({
             icon: marker1
         });
+        this.flightPath = new google.maps.Polyline({
+            geodesic: false,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
 
         this.map.addListener('click', (e) => {
             const placeMarker = (latLng) => {
@@ -148,7 +154,7 @@ class TripCreator extends React.Component {
         geocoder.geocode({
             'address': value
         }, (results, status) => {
-            // if (this.flightPath) this.flightPath.setMap(null);
+            if (this.flightPath) this.flightPath.setMap(null);
             if (status === 'OK') {
                 const latLng = results[0].geometry.location;
                 if (name === 'startingPoint') {
@@ -176,6 +182,7 @@ class TripCreator extends React.Component {
     updateMap() {
         if (this.state.startingPoint.value && this.state.destinationPoint.value) {
             this.updateGroundRoute();
+            this.updateFlightRoute();
         } 
     }
 
@@ -234,53 +241,14 @@ class TripCreator extends React.Component {
         });
     }
 
-    // updateFlightRoute() {
-    //     const geocoder = new google.maps.Geocoder();
-
-    //     const second = (res) => {
-    //         geocoder.geocode({
-    //             'address': this.state.destinationPoint
-    //         }, (results, status) => {
-    //             if (status === 'OK') {
-    //                 var flightPlanCoordinates = [
-    //                     res[0].geometry.location,
-    //                     results[0].geometry.location
-    //                 ];
-    //                 this.flightPath = new google.maps.Polyline({
-    //                     path: flightPlanCoordinates,
-    //                     geodesic: true,
-    //                     strokeColor: '#FF0000',
-    //                     strokeOpacity: 1.0,
-    //                     strokeWeight: 2
-    //                 });
-
-    //                 this.flightPath.setMap(this.map);
-    //             } else {
-    //                 this.props.pushNotification({
-    //                     title: 'Location',
-    //                     time: new Date(),
-    //                     message: 'Couldn\'t find second location',
-    //                     type: 'danger'
-    //                 });
-    //             }
-    //         });
-    //     };
-    //     geocoder.geocode({
-    //         'address': this.state.startingPoint
-    //     }, (results, status) => {
-    //         if (this.flightPath) this.flightPath.setMap(null);
-    //         if (status === 'OK') {
-    //             second(results);
-    //         } else {
-    //             this.props.pushNotification({
-    //                 title: 'Location',
-    //                 time: new Date(),
-    //                 message: 'Couldn\'t find first location',
-    //                 type: 'danger'
-    //             });
-    //         }
-    //     });
-    // }
+    updateFlightRoute() {
+        let flightPlanCoordinates = [
+            this.state.startingPoint.location,
+            this.state.destinationPoint.location,
+        ];
+        this.flightPath.setPath(flightPlanCoordinates);
+        this.flightPath.setMap(this.map);
+    }
 
     handleTransportTypeChange(event) {
         this.setState({
@@ -369,7 +337,7 @@ class TripCreator extends React.Component {
     }
 
     showSth() {
-        return <div id="carouselExampleControls" className="carousel slide col-9 container-75vh" data-ride="carousel">
+        return <div id="carouselExampleControls" className="carousel slide col-8" data-ride="carousel">
             <div className="carousel-inner bg-dark container-75vh">
                 <div className="carousel-item active">
                     <div ref={this.mapRef} className="d-block w-100 container-75vh"></div>
@@ -384,6 +352,12 @@ class TripCreator extends React.Component {
                 <span className="carousel-control-next-icon" aria-hidden="true"></span>
                 <span className="sr-only">Next</span>
             </a>
+            <div className="my-2 text-right">
+                <span className="font-weight-light">
+                    <span className="font-weight-bold">Left Mouse Click</span> - mark starting point |
+                    <span className="font-weight-bold"> Right Mouse Click</span> - mark destination point
+                </span>
+            </div>
         </div>;
     }
 
@@ -469,27 +443,21 @@ class TripCreator extends React.Component {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="form-group col">
+                            <div className="col">
                                 <label htmlFor="trip-creator-upload-img" className="label-input-file btn btn-primary btn-sm">Upload images</label>
                                 <input ref={this.uploadImagesInputRef} id="trip-creator-upload-img"
                                     type="file" className="input-file" onChange={e => this.uploadFiles(e)} multiple accept="image/*" />
                             </div>
                         </div>
-                        <div className="row">Distance: {this.state.distance.text}</div>
-                        <div className="row">Predicted travel time: {this.state.duration.text}</div>
+                        <div className="row px-3 my-1">Distance: {this.state.transportType !== 'plane' ? this.state.distance.text : '-'}</div>
+                        <div className="row px-3">Predicted travel time: {this.state.transportType !== 'plane' ? this.state.duration.text : '-'}</div>
                     </form>
                 </div>
                 <div className="row">
-                    <form className="col-9">
-                        <div className="mb-2 text-right">
-                            <span className="font-weight-light">
-                                <span className="font-weight-bold">Left Mouse Click</span> - mark starting point |
-                                <span className="font-weight-bold"> Right Mouse Click</span> - mark destination point
-                            </span>
-                        </div>
+                    <form className="col-8">
                         <div className="form-group">
                             <textarea className={'form-control form-control-sm' + (this.state.tripDescription.isValid ? '' : ' is-invalid')}
-                            placeholder="Description of your trip" name="tripDescription" onChange={e => this.handleValueChange(e)}>
+                            placeholder="Description of your trip" name="tripDescription" rows={5} onChange={e => this.handleValueChange(e)}>
                             </textarea>
                             <div className="invalid-feedback">
                                 Please provide a trip description.
@@ -497,7 +465,7 @@ class TripCreator extends React.Component {
                         </div>
                     </form>
                     <div className="col text-center">
-                        <button onClick={() => this.createTrip()} className="btn btn-sm btn-primary mt-4">Create trip</button>
+                        <button onClick={() => this.createTrip()} className="btn btn-primary mt-4">Create trip</button>
                     </div>
                 </div>
             </div>

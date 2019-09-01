@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import { TripService } from '../services';
 import { Pagination } from './Pagination';
+import { SingleDetail } from './SingleDetail';
 
 const ts = new TripService();
 
@@ -50,7 +51,7 @@ class Trips extends React.Component {
         const pages = Math.ceil(this.state.tripsCount / this.state.tripsPerPage);
         return (
             <div>
-                <div>
+                <div className="mx-5">
                 {
                     this.state.trips.map((trip, index ) => {
                         const availableSpots = trip.numberOfPeople - (trip.participants ? trip.participants.length : 0);
@@ -61,7 +62,7 @@ class Trips extends React.Component {
                                     <img src={`data:image/jpg;base64, ${trip.images[0]}`} />
                                 }
                             </div>
-                            <div className="col-5">
+                            <div className="col-6">
                                 <div className="row mt-4">
                                     <div className="col-auto">
                                         {trip.startingPoint && <h3 className="d-inline yoo-text-1">{trip.startingPoint.value}</h3>}
@@ -79,17 +80,18 @@ class Trips extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-4">
-                                Transport: {trip.transport}<br />
-                                Transport: {trip.transportType}<br />
-                                Number of people: {trip.numberOfPeople}<br />
-                                <span className={availableSpots === 0 ? 'text-danger': ''}>Available spots: {availableSpots}</span><br />
-                                Accommodation: {trip.accommodation}<br />
+                            <div className="col-3">
+                                <SingleDetail compact={true} infoName="Transport" infoValue={trip.transport} />
+                                <SingleDetail compact={true} infoName="Type of transport" infoValue={trip.transport !== 'own' ? trip.transportType : '-'} />
+                                <SingleDetail compact={true} infoName="Number of people" infoValue={trip.numberOfPeople} />
+                                <SingleDetail compact={true} infoName="Available spots" infoValue={availableSpots} />
+                                <SingleDetail compact={true} infoName="Accommodation" infoValue={trip.accommodation} />
+                                <SingleDetail compact={true} infoName="Author" infoValue={<Link to={`/profile/${trip.author}`} className="text-decoration-none">{trip.author}</Link>} />
                             </div>
-                            <div className="col">
-                                <Link to={`/trip/${trip._id}`} className="btn btn-primary btn-sm mx-1">Check</Link>
+                            <div className="col mt-5">
+                                <Link to={`/trip/${trip._id}`} className="btn btn-primary btn-sm m-1 w-100">Check</Link>
                                 {this.props.login === trip.author &&
-                                    <button className="btn btn-danger btn-sm mx-1" onClick={() => this.removeTrip(trip._id)}>Remove</button>
+                                    <button className="btn btn-danger btn-sm m-1 w-100" onClick={() => this.removeTrip(trip._id)}>Remove</button>
                                 }
                             </div>
                         </div>
