@@ -85,71 +85,54 @@ class MyProfile extends React.Component {
         const avatar = this.state.avatar || defaultAvatar;
         return (
             <div>
-                <div className="row">
-                    <div className="col-2">
-                        <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                            <a className="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">Profile</a>
-                            <a className="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a>
-                            <a className="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+                <div className="px-5 py-4">
+                    <div className="row my-3">
+                        <div className="col">
+                            <div className="d-inline-block">
+                                <img className="avatar-l" src={`data:image/png;base64, ${avatar}`} />
+                            </div>
+                            <h3 className="d-inline-block ml-3">{this.props.login}</h3>
                         </div>
-                    </div>
-                    <div className="col">
-                        <div className="tab-content" id="v-pills-tabContent">
-                            <div className="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                                <div className="px-5 py-4">
-                                    <div className="row my-3">
-                                        <div className="col">
-                                            <div className="d-inline-block">
-                                                <img className="avatar-l" src={`data:image/png;base64, ${avatar}`} />
-                                            </div>
-                                            <h3 className="d-inline-block ml-3">{this.props.login}</h3>
-                                        </div>
-                                        {this.state.infoBox.message && 
-                                            <div className="col-auto">
-                                                <div className={`alert alert-${this.state.infoBox.type} m-4`} role="alert">
-                                                    {this.state.infoBox.message}
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                    <form onSubmit={(e) => this.editProfile(e)}>
-                                        <div className="row">
-                                            <div className="col-4">
-                                                <div className="form-group">
-                                                    <label htmlFor="password">New Password</label>
-                                                    <input type="password" name="password" className="form-control" placeholder="password" onChange={(e) => this.handleInputChange(e)}/>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label htmlFor="password">Confirm Password</label>
-                                                    <input type="password" name="confirmPassword" className="form-control" placeholder="password" onChange={(e) => this.handleInputChange(e)}/>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label htmlFor="name">Name</label>
-                                                    <input type="text" name="name" className="form-control fomr=control=sm" value={this.state.name} onChange={(e) => this.handleInputChange(e)}/>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label htmlFor="lastname">Lastname</label>
-                                                    <input type="text" name="lastName" className="form-control" value={this.state.lastName} onChange={(e) => this.handleInputChange(e)}/>
-                                                </div>
-                                                <div className="text-center">
-                                                    <input type="submit" value="Edit profile" className="btn btn-primary"/>
-                                                </div>
-                                            </div>
-                                            <div className="col">
-                                                <div className="form-group">
-                                                    <label htmlFor="description">Description</label>
-                                                    <textarea rows={8} name="description" className="form-control" value={this.state.description}
-                                                    onChange={(e) => this.handleInputChange(e)}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
+                        {this.state.infoBox.message && 
+                            <div className="col-auto">
+                                <div className={`alert alert-${this.state.infoBox.type} m-4`} role="alert">
+                                    {this.state.infoBox.message}
                                 </div>
                             </div>
-                            <div className="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">3</div>
-                            <div className="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">4</div>
-                        </div>
+                        }
                     </div>
+                    <form onSubmit={(e) => this.editProfile(e)}>
+                        <div className="row">
+                            <div className="col-4">
+                                <div className="form-group">
+                                    <label htmlFor="password">New Password</label>
+                                    <input type="password" name="password" className="form-control" placeholder="password" onChange={(e) => this.handleInputChange(e)}/>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="password">Confirm Password</label>
+                                    <input type="password" name="confirmPassword" className="form-control" placeholder="password" onChange={(e) => this.handleInputChange(e)}/>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="name">Name</label>
+                                    <input type="text" name="name" className="form-control fomr=control=sm" value={this.state.name} onChange={(e) => this.handleInputChange(e)}/>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="lastname">Lastname</label>
+                                    <input type="text" name="lastName" className="form-control" value={this.state.lastName} onChange={(e) => this.handleInputChange(e)}/>
+                                </div>
+                                <div className="text-center">
+                                    <input type="submit" value="Edit profile" className="btn btn-primary"/>
+                                </div>
+                            </div>
+                            <div className="col">
+                                <div className="form-group">
+                                    <label htmlFor="description">Description</label>
+                                    <textarea rows={8} name="description" className="form-control" value={this.state.description}
+                                    onChange={(e) => this.handleInputChange(e)}/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         );

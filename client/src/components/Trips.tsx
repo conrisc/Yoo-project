@@ -19,7 +19,8 @@ class Trips extends React.Component {
             tripsCount: 0,
             tripsPerPage: 5,
             currentPage: Number(this.props.match.params.pageNumber) || 1,
-            author: this.props.match.params.author || ''
+            author: this.props.match.params.author || '',
+            shouldShowSpinner: true
         }
         this.updateTrips(this.state.currentPage, this.state.author);
     }
@@ -27,15 +28,24 @@ class Trips extends React.Component {
     componentDidUpdate() {
         const newPage = Number(this.props.match.params.pageNumber) || 1;
         const author = this.props.match.params.author || '';
-        if (this.state.currentPage !== newPage || this.state.author != author)
+        if (this.state.currentPage !== newPage || this.state.author !== author) {
+            if (this.state.shouldShowSpinner !== true)
+                this.setState({ shouldShowSpinner: true });
             this.updateTrips(newPage, author);
+        }
     }
 
     updateTrips(page, author) {
         const skip = (page - 1) * this.state.tripsPerPage;
         ts.getTrips({ skip, limit: this.state.tripsPerPage, author })
             .then(data => {
-                this.setState({ trips: data.trips, tripsCount: data.tripsCount, currentPage: page, author});
+                this.setState({
+                    trips: data.trips,
+                    tripsCount: data.tripsCount,
+                    currentPage: page,
+                    author,
+                    shouldShowSpinner: false
+                });
             })
     }
 
@@ -46,10 +56,18 @@ class Trips extends React.Component {
             });
     }
 
+    showSpinner() {
+        return <div className="text-center">
+            <div className="spinner-border" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+        </div>
+    }
+
     render() {
         const currentPage = this.state.currentPage;
         const pages = Math.ceil(this.state.tripsCount / this.state.tripsPerPage);
-        return (
+        return this.state.shouldShowSpinner ? this.showSpinner() : (
             <div>
                 <div className="mx-5">
                 {
@@ -105,7 +123,6 @@ class Trips extends React.Component {
         );
     }
 }
-
 
 const mapStateToProps = (state) => {
   return { login: state.login };
